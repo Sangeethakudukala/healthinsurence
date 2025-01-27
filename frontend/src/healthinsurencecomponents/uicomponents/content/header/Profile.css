@@ -1,0 +1,130 @@
+/* General Media Queries for the Profile Component */
+
+/* Large screens (default styles already handle this) */
+
+/* Medium screens (Tablets and smaller desktops) */
+@media (max-width: 1024px) {
+    .app-container {
+      padding: 20px;
+    }
+  
+    .container {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .w-50 {
+      width: 100%;
+      padding: 10px;
+    }
+  
+    .d-flex.align-items-start {
+      flex-wrap: wrap;
+    }
+  
+    .img-fluid {
+      max-width: 300px;
+      max-height: 400px;
+      margin: 10px auto;
+    }
+  
+    .text-muted {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  }
+  
+  /* Small screens (Smartphones in landscape mode) */
+  @media (max-width: 768px) {
+    .navbar-brand img {
+      height: 30px;
+    }
+  
+    .app-container {
+      padding: 15px;
+    }
+  
+    .w-50 {
+      width: 100%;
+      padding: 0 15px;
+    }
+  
+    .img-fluid {
+      max-width: 250px;
+      max-height: 300px;
+      margin-bottom: 20px;
+    }
+  
+    .text-muted {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  
+    footer p {
+      font-size: 12px;
+    }
+  
+    .text-danger {
+      font-size: 14px;
+    }
+  }
+  
+  /* Extra small screens (Smartphones in portrait mode) */
+  @media (max-width: 480px) {
+    .navbar-brand img {
+      height: 25px;
+    }
+  
+    .navbar {
+      flex-wrap: wrap;
+      padding: 10px;
+    }
+  
+    .container {
+      padding: 10px;
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .w-50 {
+      width: 100%;
+      padding: 0 10px;
+    }
+  
+    .img-fluid {
+      max-width: 200px;
+      max-height: 250px;
+    }
+  
+    .text-muted {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+  
+    footer p {
+      font-size: 10px;
+    }
+  
+    .text-danger {
+      font-size: 12px;
+    }
+  
+    .align-items-center {
+      flex-direction: column;
+    }
+  
+    .d-flex {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .d-flex.justify-content-center {
+      gap: 10px;
+    }
+  
+    .mt-3 {
+      margin-top: 15px;
+    }
+  }
+  

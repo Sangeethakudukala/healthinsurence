@@ -1,0 +1,131 @@
+/* Base Styles */
+.container {
+  padding: 20px;
+}
+
+.card {
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* For screens smaller than 576px (Mobile) */
+@media (max-width: 576px) {
+  .container {
+    padding: 15px;
+  }
+
+  .card {
+    margin-bottom: 15px;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .col-md-4 {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .form-group label,
+  .form-check label {
+    font-size: 0.9rem;
+  }
+
+  .form-control {
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+/* For screens from 576px to 768px (Tablet) */
+@media (min-width: 576px) and (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .col-md-4 {
+    width: 48%;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    text-align: center;
+  }
+
+  .form-group label,
+  .form-check label {
+    font-size: 1rem;
+  }
+
+  .form-control {
+    font-size: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+/* For screens from 768px to 992px (Small Desktop) */
+@media (min-width: 768px) and (max-width: 992px) {
+  .col-md-4 {
+    width: 32%;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    text-align: center;
+  }
+}
+
+/* For screens from 992px to 1200px (Medium Desktop) */
+@media (min-width: 992px) and (max-width: 1200px) {
+  .col-md-4 {
+    width: 30%;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .btn {
+    width: auto;
+  }
+}
+
+/* For screens larger than 1200px (Large Desktop) */
+@media (min-width: 1200px) {
+  .col-md-4 {
+    width: 30%;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+}
