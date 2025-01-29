@@ -776,3 +776,2183 @@ input[type="range"]::-moz-range-thumb {
 
 
 
+
+// import React, { useState, useEffect } from "react";
+// import axios from "axios";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import "./Relation.css";
+// import Nav from "../../nav/Nav";
+// import Footer from "../../nav/Footer";
+// import { useNavigate } from "react-router-dom";
+// import Cookies from 'js-cookie';
+// import { useDispatch, useSelector } from "react-redux";
+// import { setDisease, setAge } from "../../../../storage/relationsSlice";
+
+// function Relation() {
+
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+
+//   const [customerDetails, setCustomerDetails] = useState({});
+
+//   // const relationData = [
+//   //   "Mother",
+//   //   "Father",
+//   //   "GrandMother",
+//   //   "GrandFather",
+//   //   "Mother-In-Law",
+//   //   "Father-In-Law",
+//   // ];
+//   const relationData = useSelector(
+//     (state) => state.relations.selectedRelations
+//   );
+
+
+//   const sonData = [];
+//   const daughterData = [];
+
+//   const allRelations = [...relationData, ...sonData, ...daughterData].filter(
+//     (relation) => relation
+//   );
+
+//   // const genderMapping = {
+//   //   Self: Cookies.get('UserDetails'),
+//   //   Wife:"Female",
+//   //   Husband: "Male",
+//   //   Mother: "Female",
+//   //   Father: "Male",
+//   //    GrandMother: "Female",
+//   //   // GRANDMOTHER:"Female",
+//   //   GrandFather: "Male",
+//   //   "Mother-In-Law": "Female",
+//   //   "Father-In-Law": "Male",
+//   //   Son: "Male",
+//   //   Daughter: "Female",
+//   // };
+//   // const genderMapping = {
+//   //   self: Cookies.get('UserDetails'),
+//   //   wife: "Female",
+//   //   husband: "Male",
+//   //   mother: "Female",
+//   //   father: "Male",
+//   //   grandmother: "Female",
+//   //   grandfather: "Male",
+//   //   "mother-in-law": "Female",
+//   //   "father-in-law": "Male",
+//   //   son: "Male",
+//   //   daughter: "Female",
+//   // };
+
+
+//   // const [StoreData, setData] = useState(
+//   //   allRelations.map((relation) => ({
+//   //     Relation: relation,
+//   //     Age: "",
+//   //     RelationPersonName: "",
+//   //     Gender: genderMapping[relation] || "Unknown",
+//   //     // Gender:""||"Unknown",
+//   //     CustomerId: "",
+//   //     Disease: "",
+//   //     DiseaseDetails: "",
+//   //     errorMessage: { Age: "", RelationPersonName: "" },
+//   //   }))
+//   // );
+//   const genderMapping = { 
+//     // Self: Cookies.get("UserDetails"), // Assuming UserDetails includes gender
+//     Self: Cookies.get("UserDetails")
+//     ? Cookies.get("UserDetails").charAt(0).toUpperCase() + Cookies.get("UserDetails").slice(1)
+//     : "Unknown", // Capitalize the first letter of the gender
+//     Husband: "Male",
+//     Wife: "Female",
+//     Mother: "Female",
+//     Father: "Male",
+//     GrandMother: "Female",
+//     GrandFather: "Male",
+//     "Mother-In-Law": "Female",
+//     "Father-In-Law": "Male",
+//     Son: "Male",
+//     Daughter: "Female",
+//   };
+
+//   // Dynamically ensure gender for grandparents and in-laws
+//   const resolvedGender = (relation) => {
+//     if (genderMapping[relation]) return genderMapping[relation];
+
+//     // Add additional dynamic logic for undefined relations (if needed)
+//     if (relation.toLowerCase().includes("grand")) {
+//       return relation.toLowerCase().includes("mother") ? "Female" : "Male";
+//     }
+//     if (relation.toLowerCase().includes("in-law")) {
+//       return relation.toLowerCase().includes("mother") ? "Female" : "Male";
+//     }
+
+//     return "Not Available"; // Default fallback
+//   };
+
+//   const [StoreData, setData] = useState(
+//     allRelations
+//       .filter((relation) => genderMapping[relation] || resolvedGender(relation))
+//       .map((relation) => ({
+//         Relation: relation,
+//         Age: "",
+//         RelationPersonName: "",
+//         Gender: genderMapping[relation] || resolvedGender(relation),
+//         CustomerId: "",
+//         Disease: "",
+//         DiseaseDetails: "",
+//         errorMessage: { Age: "", RelationPersonName: "" },
+//       }))
+//   );
+
+
+
+//   // useEffect(() => {
+//   //   const mobNo = Cookies.get("MobileNumber");
+//   //   axios
+//   //     .get(`http://183.82.106.55:9100/register/fetch/${mobNo}`)
+//   //     .then((res) => {
+//   //       setCustomerDetails(res.data);
+//   //       setData((prevData) =>
+//   //         prevData.map((item) => ({ ...item, CustomerId: res.data.customerId }))
+//   //       );
+//   //     })
+//   //     .catch((error) => {
+//   //       console.error("Error fetching customer details:", error);
+//   //     });
+//   // }, []);
+
+//   useEffect(() => {
+//     const mobNo = Cookies.get("MobileNumber");
+//     axios
+//       .get(`http://183.82.106.55:9100/register/fetch/${mobNo}`)
+//       .then((res) => {
+//         setCustomerDetails(res.data);
+//         setData((prevData) =>
+//           prevData.map((item) => ({
+//             ...item,
+//             CustomerId: res.data.customerId,
+//             RelationPersonName:
+//               item.Relation === "Self" ? res.data.fullName : item.RelationPersonName,
+//           }))
+//         );
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching customer details:", error);
+//       });
+//   }, []);
+
+//   const handleChange = (index, field, value) => {
+//     const updatedData = [...StoreData];
+//     updatedData[index][field] = value.trim();
+
+//     let errors = { Age: "", RelationPersonName: "" };
+
+//     if (field === "Age") {
+//       const age = updatedData[index].Age;
+//       if (age < 25 || age > 100 || isNaN(age)) {
+//         errors.Age = `Age must be between 25 and 100 for relation: ${updatedData[index].Relation}`;
+//       }
+//     }
+
+//     // if (field === "RelationPersonName") {
+    
+//   if (field === "RelationPersonName" && updatedData[index].Relation !== "Self") {
+//       const name = updatedData[index].RelationPersonName;
+//       if (name && !/^[A-Za-z\s]+$/.test(name)) {
+//         errors.RelationPersonName = `Please enter a valid name for relation: ${updatedData[index].Relation}`;
+//       }
+//     }
+
+//     updatedData[index].errorMessage = errors;
+//     setData(updatedData);
+//     // Dispatch disease information with the relation index
+//     // if (field === "Disease") {
+//     //   dispatch(setDisease( ));
+//     // }
+//   };
+
+//   const updateDiseaseField = () => {
+//     const updatedStoreData = StoreData.map((data) => ({
+//       ...data, // Spread all existing properties
+//       Disease: data.Disease.trim() !== "" ? data.Disease : "No", // Ensure "No" is explicitly set
+//     }));
+
+//     setData(updatedStoreData);
+
+//     const hasAnyDisease = updatedStoreData.some((data) => data.Disease === "Yes");
+//     dispatch(setDisease(hasAnyDisease ? "Yes" : "No"));
+//   };
+
+
+//   const updateAgeField = () => {
+//     const updatedAgeData = StoreData.map((data) => ({
+//       ...data,
+//       Age: data.Age,
+//     }));
+
+//     // Dispatch the updated age data to Redux
+//     dispatch(setAge(updatedAgeData));
+//   };
+
+//   const handleSubmit = (event) => {
+//     event.preventDefault();
+
+    
+
+//     let isValid = true;
+//     const updatedData = [...StoreData];
+
+//     updatedData.forEach((data, index) => {
+//       let errors = { Age: "", RelationPersonName: "" };
+
+//       if (!/^\d{1,3}$/.test(data.Age)) {
+//         errors.Age = `Age must be between 25 and 100 for relation: ${data.Relation}`;
+//         isValid = false;
+//       }
+//       // if (!/^[A-Za-z\s]+$/.test(data.RelationPersonName)) {
+//       //   errors.RelationPersonName = `Please enter a valid name for relation: ${data.Relation}`;
+//       //   isValid = false;
+//       // }
+//       if (data.Relation !== "Self" && !/^[A-Za-z\s]+$/.test(data.RelationPersonName)) {
+//         errors.RelationPersonName = `Please enter a valid name for relation: ${data.Relation}`;
+//         isValid = false;
+//       }
+//       updatedData[index].errorMessage = errors;
+//     });
+
+//     setData(updatedData);
+
+//     if (isValid) {
+//       console.log(StoreData);
+//       updateDiseaseField();
+//       updateAgeField();
+//       // alert("Form Submitted!");
+
+//       // Navigate to the new page (update the path as per your route)
+//       navigate('/you'); // Replace with your desired route
+
+//     }
+//   };
+//   console.log(customerDetails);
+
+//   return (
+//     <div>
+//       <Nav />
+//       <div>
+//         <div className="container mt-5">
+
+//           <h1 className="text-center mb-4">Customer and Relation Information</h1>
+//           <form onSubmit={handleSubmit}>
+//             <div className="row">
+//               {allRelations.map((relation, index) => (
+//                 <div key={`${relation}-${index}`} className="col-md-4 mb-4">
+//                   <div className="card" style={{ borderRadius: '10px', border: '1px solid #ddd', backgroundColor: '#f9f9f9', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+//                     <div className="card-body">
+//                       <h5 className="card-title">Relation: {relation}</h5>
+
+//                       {/* <p><strong>Gender:</strong> {StoreData[index].Gender}</p> */}
+//                       <p><strong>Gender:</strong> {StoreData[index]?.Gender || "Not Available"}</p>
+
+//                       {/* <p><strong>Customer ID:</strong> {StoreData[index].CustomerId}</p> */}
+
+//                       <div className="form-group">
+//                         <label htmlFor={`age-${index}`}>Age of the Relation:</label>
+//                         <input
+//                           type="text"
+//                           maxLength={3}
+//                           className="form-control"
+//                           id={`age-${index}`}
+//                           value={StoreData[index].Age}
+//                           onChange={(e) => handleChange(index, "Age", e.target.value)}
+//                           onKeyPress={(e) => {
+//                             if (!/[0-9]/.test(e.key)) {
+//                               e.preventDefault();
+//                             }
+//                           }}
+//                           required
+//                         />
+//                         {StoreData[index].errorMessage.Age && (
+//                           <span className="text-danger">
+//                             {StoreData[index].errorMessage.Age}
+//                           </span>
+//                         )}
+//                       </div>
+
+//                       <div className="form-group">
+
+//                         {relation === "Self" ? (
+//                           <>
+//                             <label htmlFor={`name-${index}`}>Relation Person's Name:</label>
+//                             <input
+//                               type="text"
+//                               className="form-control"
+//                               id={`name-${index}`}
+//                               value={StoreData[index].RelationPersonName || customerDetails.fullName || ""}
+//                             // onChange={(e) =>
+//                             //   handleChange(index, "RelationPersonName", e.target.value)
+//                             // }
+//                             // onKeyPress={(e) => {
+//                             //   if (!/[a-zA-Z ]/.test(e.key)) {
+//                             //     e.preventDefault();
+//                             //   }
+//                             // }}
+//                             // required
+//                             />
+//                           </>
+//                         ) : (
+//                           <>
+//                             <label htmlFor={`name-${index}`}>Relation Person's Name:</label>
+//                             <input
+//                               type="text"
+//                               className="form-control"
+//                               id={`name-${index}`}
+//                               value={StoreData[index].RelationPersonName}
+//                               onChange={(e) =>
+//                                 handleChange(index, "RelationPersonName", e.target.value)
+//                               }
+//                               onKeyPress={(e) => {
+//                                 if (!/[a-zA-Z ]/.test(e.key)) {
+//                                   e.preventDefault();
+//                                 }
+//                               }}
+//                               required
+//                             />
+//                           </>
+//                         )}
+//                         {StoreData[index].errorMessage.RelationPersonName && (
+//                           <span className="text-danger">
+//                             {StoreData[index].errorMessage.RelationPersonName}
+//                           </span>
+//                         )}
+//                       </div>
+
+
+
+//                       <div className="form-group">
+//                         <label> Pre-Existing Disease:</label>
+
+//                         <div className="d-flex align-items-center">
+//                           <div className="form-check mr-3">
+//                             <input
+//                               type="radio"
+//                               className="form-check-input"
+//                               id={`disease-yes-${index}`}
+//                               name={`disease-${index}`}
+//                               value="Yes"
+//                               checked={StoreData[index].Disease === "Yes"}
+//                               onChange={() => handleChange(index, "Disease", "Yes")}
+//                               required
+//                             />
+//                             <label
+//                               className="form-check-label"
+//                               htmlFor={`disease-yes-${index}`}
+//                             >
+//                               Yes
+//                             </label>
+//                           </div>
+//                           <div className="form-check">
+//                             <input
+//                               type="radio"
+//                               className="form-check-input"
+//                               id={`disease-no-${index}`}
+//                               name={`disease-${index}`}
+//                               value="No"
+//                               checked={StoreData[index].Disease === "No"}
+//                               onChange={() => handleChange(index, "Disease", "No")}
+//                               required
+//                             />
+//                             <label
+//                               className="form-check-label"
+//                               htmlFor={`disease-no-${index}`}
+//                             >
+//                               No
+//                             </label>
+//                           </div>
+//                         </div>
+//                       </div>
+
+//                       {StoreData[index].Disease === "Yes" && (
+//                         <div className="form-group mt-3">
+//                           <label htmlFor={`disease-details-${index}`}>
+//                             Disease Details:
+//                           </label>
+//                           <select
+//                             className="form-control"
+//                             id={`disease-details-${index}`}
+//                             value={StoreData[index].DiseaseDetails}
+//                             onChange={(e) =>
+//                               handleChange(index, "DiseaseDetails", e.target.value)
+//                             }
+//                             required
+//                           >
+//                             <option value="">Select a disease</option>
+//                             <option value="cancer">Cancer (all types)</option>
+//                             <option value="heart_disease">
+//                               Heart Disease (Coronary Artery Disease, Heart Attack,
+//                               etc.)
+//                             </option>
+//                             <option value="cancer">Cancer (all types)</option>
+//                             <option value="heart_disease">
+//                               Heart Disease (Coronary Artery Disease, Heart Attack, etc.)
+//                             </option>
+//                             <option value="stroke">Stroke</option>
+//                             <option value="diabetes">Diabetes (Type 1, Type 2)</option>
+//                             <option value="hypertension">
+//                               Hypertension (High Blood Pressure)
+//                             </option>
+//                             <option value="kidney_disease">Kidney Disease</option>
+//                             <option value="liver_disease">
+//                               Liver Disease (Hepatitis, Cirrhosis, etc.)
+//                             </option>
+//                             <option value="copd">
+//                               Chronic Obstructive Pulmonary Disease (COPD)
+//                             </option>
+//                             <option value="asthma">Asthma</option>
+//                             <option value="alzheimers">Alzheimer's Disease</option>
+//                             <option value="parkinsons">Parkinson's Disease</option>
+//                             <option value="multiple_sclerosis">Multiple Sclerosis</option>
+//                             <option value="epilepsy">Epilepsy</option>
+//                             <option value="tuberculosis">Tuberculosis</option>
+//                             <option value="rheumatoid_arthritis">
+//                               Rheumatoid Arthritis
+//                             </option>
+//                             <option value="osteoarthritis">Osteoarthritis</option>
+//                             <option value="ulcerative_colitis">Ulcerative Colitis</option>
+//                             <option value="crohns_disease">Crohn's Disease</option>
+//                             <option value="cystic_fibrosis">Cystic Fibrosis</option>
+//                             <option value="kidney_failure">Kidney Failure</option>
+//                             <option value="sickle_cell_anemia">Sickle Cell Anemia</option>
+//                             <option value="hemophilia">Hemophilia</option>
+//                             <option value="hiv_aids">HIV/AIDS</option>
+//                             <option value="hiv_related_illnesses">
+//                               HIV-related Illnesses
+//                             </option>
+//                             <option value="obesity">Obesity</option>
+//                             <option value="anxiety_disorders">Anxiety Disorders</option>
+//                             <option value="depression">Depression</option>
+//                             <option value="schizophrenia">Schizophrenia</option>
+//                             <option value="bipolar_disorder">Bipolar Disorder</option>
+//                             <option value="migraine">Migraine</option>
+//                             <option value="autoimmune_disorders">
+//                               Autoimmune Disorders (e.g., Lupus, MS)
+//                             </option>
+//                             <option value="gallbladder_disease">
+//                               Gallbladder Disease
+//                             </option>
+//                             <option value="pneumonia">Pneumonia</option>
+//                             <option value="meningitis">Meningitis</option>
+//                             <option value="pneumothorax">
+//                               Pneumothorax (Collapsed Lung)
+//                             </option>
+//                             <option value="sepsis">Sepsis</option>
+//                             <option value="blood_disorders">
+//                               Blood Disorders (e.g., Leukemia, Lymphoma)
+//                             </option>
+//                             <option value="sleep_apnea">Sleep Apnea</option>
+//                             <option value="digestive_disorders">
+//                               Digestive Disorders (e.g., GERD, IBS)
+//                             </option>
+//                             <option value="endometriosis">Endometriosis</option>
+//                             <option value="pcos">Polycystic Ovary Syndrome (PCOS)</option>
+//                             <option value="chronic_sinusitis">Chronic Sinusitis</option>
+//                             <option value="osteoporosis">Osteoporosis</option>
+//                             <option value="fibromyalgia">Fibromyalgia</option>
+//                             <option value="spondylitis">Spondylitis</option>
+//                             <option value="chemotherapy">
+//                               Cancer-related treatments (e.g., chemotherapy)
+//                             </option>
+//                             <option value="tuberculosis_tb">Tuberculosis (TB)</option>
+//                             <option value="hepatitis_b_c">Hepatitis B and C</option>
+//                             <option value="respiratory_diseases">
+//                               Respiratory Diseases (e.g., Pneumonia, Bronchitis)
+//                             </option>
+//                             <option value="pancreatitis">Pancreatitis</option>
+//                             <option value="chronic_pain_syndromes">
+//                               Chronic Pain Syndromes
+//                             </option>
+//                             <option value="infectious_diseases">
+//                               Infectious Diseases (e.g., Malaria, Dengue, COVID-19)
+//                             </option>
+//                             <option value="others">others</option>
+//                           </select>
+//                         </div>
+//                       )}
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+//             <div className="text-center mt-4">
+//               <button type="submit" className="btn btn-primary">Submit</button>
+//             </div>
+//           </form>
+//         </div>
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// }
+// export default Relation;
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./Relation.css";
+import Nav from "../../nav/Nav";
+import Footer from "../../nav/Footer";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { setDisease, setAge } from "../../../../storage/relationsSlice";
+
+function Relation() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [customerDetails, setCustomerDetails] = useState({});
+  const relationData = useSelector((state) => state.relations.selectedRelations);
+
+
+  // const relationData = [
+  //   "Mother",
+  //   "Father",
+  //   "GrandMother",
+  //   "GrandFather",
+  //   "Mother-In-Law",
+  //   "Father-In-Law",
+  // ];
+
+  const sonData = [];
+  const daughterData = [];
+
+
+
+  const allRelations = [...relationData, ...sonData, ...daughterData].filter(
+    (relation) => relation
+  );
+
+  const genderMapping = {
+    Self: Cookies.get("UserDetails")
+      ? Cookies.get("UserDetails").charAt(0).toUpperCase() + Cookies.get("UserDetails").slice(1)
+      : "Unknown",
+    Husband: "Male",
+    Wife: "Female",
+    Self :Cookies.get('UserDetails'),
+    Husband :"Male",
+    Mother: "Female",
+    Father: "Male",
+    GrandMother: "Female",
+    GrandFather: "Male",
+    "Mother-In-Law": "Female",
+    "Father-In-Law": "Male",
+    Son: "Male",
+    Daughter: "Female",
+  };
+
+  const resolvedGender = (relation) => {
+    if (genderMapping[relation]) return genderMapping[relation];
+    if (relation.toLowerCase().includes("grand")) {
+      return relation.toLowerCase().includes("mother") ? "Female" : "Male";
+    }
+    if (relation.toLowerCase().includes("in-law")) {
+      return relation.toLowerCase().includes("mother") ? "Female" : "Male";
+    }
+    return "Not Available"; 
+  };
+
+  const [StoreData, setData] = useState(
+    allRelations
+      .filter((relation) => genderMapping[relation] || resolvedGender(relation))
+      .map((relation) => ({
+        Relation: relation,
+        Age: "",
+        RelationPersonName: "",
+        Gender: genderMapping[relation] || resolvedGender(relation),
+        CustomerId: "",
+        Disease: "",
+        DiseaseDetails: "",
+        errorMessage: { Age: "", RelationPersonName: "" },
+      }))
+  );
+
+  // const [StoreData, setData] = useState(
+  //   allRelations.map((relation) => ({
+  //     Relation: relation,
+  //     Age: "",
+  //     RelationPersonName: "",
+  //     Gender: genderMapping[relation] || "Unknown",
+  //     CustomerId: "",
+  //     Disease: "",
+  //     DiseaseDetails: "",
+  //     errorMessage: { Age: "", RelationPersonName: "" },
+  //   }))
+  // );
+
+  useEffect(() => {
+    const mobNo = Cookies.get("MobileNumber");
+    axios
+      .get(`http://183.82.106.55:9100/register/fetch/${mobNo}`)
+      .then((res) => {
+        setCustomerDetails(res.data);
+        setData((prevData) =>
+          prevData.map((item) => ({
+            ...item,
+            CustomerId: res.data.customerId,
+            RelationPersonName:
+              item.Relation === "Self" ? res.data.fullName : item.RelationPersonName,
+          }))
+          prevData.map((item) => ({ ...item, CustomerId: res.data.customerId }))
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching customer details:", error);
+      });
+  }, []);
+
+  const handleChange = (index, field, value) => {
+    const updatedData = [...StoreData];
+    updatedData[index][field] = value.trim();
+
+    let errors = { Age: "", RelationPersonName: "" };
+
+    if (field === "Age") {
+      const age = updatedData[index].Age;
+      if (age < 25 || age > 100 || isNaN(age)) {
+        errors.Age = `Age must be between 25 and 100 for relation: ${updatedData[index].Relation}`;
+      }
+    }
+
+
+    if (field === "RelationPersonName" && updatedData[index].Relation !== "Self") {
+    if (field === "RelationPersonName") {
+      const name = updatedData[index].RelationPersonName;
+      if (name && !/^[A-Za-z\s]+$/.test(name)) {
+        errors.RelationPersonName = `Please enter a valid name for relation: ${updatedData[index].Relation}`;
+      }
+    }
+
+    updatedData[index].errorMessage = errors;
+    setData(updatedData);
+      // Dispatch disease information with the relation index
+  // if (field === "Disease") {
+  //   dispatch(setDisease( ));
+  // }
+  };
+
+  const updateDiseaseField = () => {
+    const updatedStoreData = StoreData.map((data) => ({
+      ...data,
+      Disease: data.Disease.trim() !== "" ? data.Disease : "No", 
+    }));
+
+    setData(updatedStoreData);
+
+    const hasAnyDisease = updatedStoreData.some((data) => data.Disease === "Yes");
+    dispatch(setDisease(hasAnyDisease ? "Yes" : "No"));
+  }
+      // ...data, // Spread all existing properties
+    //   Disease: data.Disease.trim() !== "" ? data.Disease : "No", // Ensure "No" is explicitly set
+    // }));
+  
+  //   setData(updatedStoreData);
+  
+  //   const hasAnyDisease = updatedStoreData.some((data) => data.Disease === "Yes");
+  //   dispatch(setDisease(hasAnyDisease ? "Yes" : "No"));
+  // };
+  
+  const updateAgeField = () => {
+    const updatedAgeData = StoreData.map((data) => ({
+      ...data,
+      Age: data.Age,
+    }));
+
+    dispatch(setAge(updatedAgeData));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  
+    // Dispatch the updated age data to Redux
+    dispatch(setAge(updatedAgeData));
+  };
+  
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+
+    let isValid = true;
+    const updatedData = [...StoreData];
+
+    updatedData.forEach((data, index) => {
+      let errors = { Age: "", RelationPersonName: "" };
+      if (!/^\d{1,3}$/.test(data.Age)) {
+        errors.Age = `Age must be between 25 and 100 for relation: ${data.Relation}`;
+        isValid = false;
+      }
+
+      if (data.Relation !== "Self" && !/^[A-Za-z\s]+$/.test(data.RelationPersonName)) {
+      if (!/^[A-Za-z\s]+$/.test(data.RelationPersonName)) {
+
+        errors.RelationPersonName = `Please enter a valid name for relation: ${data.Relation}`;
+        isValid = false;
+      }
+      updatedData[index].errorMessage = errors;
+    });
+
+    setData(updatedData);
+
+    if (isValid) {
+      updateDiseaseField();
+      updateAgeField();
+      navigate('/you'); // Replace with your desired route
+    }
+  };
+
+  return (
+    <div>
+      <Nav />
+      <div className="container mt-5">
+        <h1 className="text-center mb-4">Customer and Relation Information</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="row">
+            {allRelations.map((relation, index) => (
+              <div key={`${relation}-${index}`} className="col-md-4 mb-4">
+                <div className="card" style={{ borderRadius: '10px', border: '1px solid #ddd', backgroundColor: '#f9f9f9', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+                  <div className="card-body">
+                    <h5 className="card-title">Relation: {relation}</h5>
+                    <p><strong>Gender:</strong> {StoreData[index]?.Gender || "Not Available"}</p>
+                    <div className="form-group">
+                      <label htmlFor={`age-${index}`}>Age of the Relation:</label>
+                      <input
+                        type="text"
+                        maxLength={3}
+                        className="form-control"
+                        id={`age-${index}`}
+                        value={StoreData[index].Age}
+                        onChange={(e) => handleChange(index, "Age", e.target.value)}
+                        onKeyPress={(e) => {
+                          if (!/[0-9]/.test(e.key)) {
+                            e.preventDefault();
+                          }
+                        }}
+                        required
+                      />
+                      {StoreData[index].errorMessage.Age && (
+                        <span className="text-danger">{StoreData[index].errorMessage.Age}</span>
+                      )}
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor={`name-${index}`}>Relation Person's Name:</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id={`name-${index}`}
+                        value={StoreData[index].RelationPersonName || ""}
+                        onChange={(e) => handleChange(index, "RelationPersonName", e.target.value)}
+                        required
+                      />
+                      {StoreData[index].errorMessage.RelationPersonName && (
+                        <span className="text-danger">{StoreData[index].errorMessage.RelationPersonName}</span>
+                      )}
+                    </div>
+
+                    <div className="form-group">
+                      <label>Pre-Existing Disease:</label>
+                      <div className="d-flex align-items-center">
+                        <div className="form-check mr-3">
+                          <input
+                            type="radio"
+                            className="form-check-input"
+                            id={`disease-yes-${index}`}
+                            name={`disease-${index}`}
+                            value="Yes"
+                            checked={StoreData[index].Disease === "Yes"}
+                            onChange={() => handleChange(index, "Disease", "Yes")}
+                            required
+                          />
+                          <label className="form-check-label" htmlFor={`disease-yes-${index}`}>Yes</label>
+                        </div>
+                        <div className="form-check">
+                          <input
+                            type="radio"
+                            className="form-check-input"
+                            id={`disease-no-${index}`}
+                            name={`disease-${index}`}
+                            value="No"
+                            checked={StoreData[index].Disease === "No"}
+                            onChange={() => handleChange(index, "Disease", "No")}
+                            required
+                          />
+                          <label className="form-check-label" htmlFor={`disease-no-${index}`}>No</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {StoreData[index].Disease === "Yes" && (
+                      <div className="form-group mt-3">
+                        <label htmlFor={`disease-details-${index}`}>Disease Details:</label>
+                        {/* <select
+                          className="form-control"
+                          id={`disease-details-${index}`}
+                          value={StoreData[index].DiseaseDetails}
+                          onChange={(e) => handleChange(index, "DiseaseDetails", e.target.value)}
+                          required
+                        >
+                          <option value="">Select a disease</option>
+                          Add options for diseases */}
+                        {/* </select> */}
+
+                        <select
+                            className="form-control"
+                            id={`disease-details-${index}`}
+                            value={StoreData[index].DiseaseDetails}
+                            onChange={(e) =>
+                              handleChange(index, "DiseaseDetails", e.target.value)
+                            }
+                            required
+                          >
+                            <option value="">Select a disease</option>
+                            <option value="cancer">Cancer (all types)</option>
+                            <option value="heart_disease">
+                              Heart Disease (Coronary Artery Disease, Heart Attack,
+                              etc.)
+                            </option>
+                            <option value="cancer">Cancer (all types)</option>
+                            <option value="heart_disease">
+                              Heart Disease (Coronary Artery Disease, Heart Attack, etc.)
+                            </option>
+                            <option value="stroke">Stroke</option>
+                            <option value="diabetes">Diabetes (Type 1, Type 2)</option>
+                            <option value="hypertension">
+                              Hypertension (High Blood Pressure)
+                            </option>
+                            <option value="kidney_disease">Kidney Disease</option>
+                            <option value="liver_disease">
+                              Liver Disease (Hepatitis, Cirrhosis, etc.)
+                            </option>
+                            <option value="copd">
+                              Chronic Obstructive Pulmonary Disease (COPD)
+                            </option>
+                            <option value="asthma">Asthma</option>
+                            <option value="alzheimers">Alzheimer's Disease</option>
+                            <option value="parkinsons">Parkinson's Disease</option>
+                            <option value="multiple_sclerosis">Multiple Sclerosis</option>
+                            <option value="epilepsy">Epilepsy</option>
+                            <option value="tuberculosis">Tuberculosis</option>
+                            <option value="rheumatoid_arthritis">
+                              Rheumatoid Arthritis
+                            </option>
+                            <option value="osteoarthritis">Osteoarthritis</option>
+                            <option value="ulcerative_colitis">Ulcerative Colitis</option>
+                            <option value="crohns_disease">Crohn's Disease</option>
+                            <option value="cystic_fibrosis">Cystic Fibrosis</option>
+                            <option value="kidney_failure">Kidney Failure</option>
+                            <option value="sickle_cell_anemia">Sickle Cell Anemia</option>
+                            <option value="hemophilia">Hemophilia</option>
+                            <option value="hiv_aids">HIV/AIDS</option>
+                            <option value="hiv_related_illnesses">
+                              HIV-related Illnesses
+                            </option>
+                            <option value="obesity">Obesity</option>
+                            <option value="anxiety_disorders">Anxiety Disorders</option>
+                            <option value="depression">Depression</option>
+                            <option value="schizophrenia">Schizophrenia</option>
+                            <option value="bipolar_disorder">Bipolar Disorder</option>
+                            <option value="migraine">Migraine</option>
+                            <option value="autoimmune_disorders">
+                              Autoimmune Disorders (e.g., Lupus, MS)
+                            </option>
+                            <option value="gallbladder_disease">
+                              Gallbladder Disease
+                            </option>
+                            <option value="pneumonia">Pneumonia</option>
+                            <option value="meningitis">Meningitis</option>
+                            <option value="pneumothorax">
+                              Pneumothorax (Collapsed Lung)
+                            </option>
+                            <option value="sepsis">Sepsis</option>
+                            <option value="blood_disorders">
+                              Blood Disorders (e.g., Leukemia, Lymphoma)
+                            </option>
+                            <option value="sleep_apnea">Sleep Apnea</option>
+                            <option value="digestive_disorders">
+                              Digestive Disorders (e.g., GERD, IBS)
+                            </option>
+                            <option value="endometriosis">Endometriosis</option>
+                            <option value="pcos">Polycystic Ovary Syndrome (PCOS)</option>
+                            <option value="chronic_sinusitis">Chronic Sinusitis</option>
+                            <option value="osteoporosis">Osteoporosis</option>
+                            <option value="fibromyalgia">Fibromyalgia</option>
+                            <option value="spondylitis">Spondylitis</option>
+                            <option value="chemotherapy">
+                              Cancer-related treatments (e.g., chemotherapy)
+                            </option>
+                            <option value="tuberculosis_tb">Tuberculosis (TB)</option>
+                            <option value="hepatitis_b_c">Hepatitis B and C</option>
+                            <option value="respiratory_diseases">
+                              Respiratory Diseases (e.g., Pneumonia, Bronchitis)
+                            </option>
+                            <option value="pancreatitis">Pancreatitis</option>
+                            <option value="chronic_pain_syndromes">
+                              Chronic Pain Syndromes
+                            </option>
+                            <option value="infectious_diseases">
+                              Infectious Diseases (e.g., Malaria, Dengue, COVID-19)
+                            </option>
+                            <option value="others">others</option>
+                          </select>
+
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-4">
+            <button type="submit" className="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import Nav from "../../nav/Nav";
+// import Footer from "../../nav/Footer";
+// import "./Quotation.css";
+// import { useNavigate } from "react-router-dom";
+// import { useSelector } from "react-redux";
+// import axios from 'axios';
+// import Cookies from 'js-cookie';
+
+
+// const Quotation = () => {
+//   const [sumAssured, setSumAssured] = useState(500000);
+//   // const [age, setAge] = useState("0-30"); // Default selected range
+//   const [age, setAge] = useState(""); // Start with an empty string for user input
+
+//   const [preExisting, setPreExisting] = useState(false); // User-provided pre-existing condition
+//   const [selectedDuration, setSelectedDuration] = useState("1 Year"); // Default selected duration
+//   const [initialPremium, setInitialPremium] = useState(0); // To store the initial premium amount
+//   const [finalPremium, setFinalPremium] = useState(0); // To store the final premium amount after considering pre-existing conditions
+//   const [preExistingAmount, setPreExistingAmount] = useState(0); // To store the premium amount due to pre-existing diseases
+// const [data,setData]=useState()
+//   const ageData = useSelector(
+//     (state) => state.relations.age
+//   );
+//   const ageDataFind = ageData.map((data) => data.Age);
+
+//   const navigate = useNavigate();
+
+//   // Function to calculate the base rate based on the age range
+//   const calculateBaseRate = (selectedAge) => {
+//     // const [minAge, maxAge] = selectedAge.split("-").map(Number);
+
+//     //  const dispatch = useDispatch();
+
+//     //  dispatch(setAge(selectedAge));
+//     //  dispatch(setDisease(hasDisease ? 'Yes' : 'No'));
+
+//      const maxAge = ageDataFind;
+
+//     let baseRate = 0;
+//     if (maxAge <= 30) {
+//       baseRate = 1; // 1% for age 0-30
+//     } else if (maxAge <= 35) {
+//       baseRate = 2; // 2% for age 30-35
+//     } else if (maxAge <= 40) {
+//       baseRate = 3; // 3% for age 35-40
+//     } else if (maxAge <= 45) {
+//       baseRate = 4; // 4% for age 40-45
+//     } else if (maxAge <= 50) {
+//       baseRate = 5; // 5% for age 45-50
+//     } else if (maxAge <= 60) {
+//       baseRate = 6; // 6% for age 50-60
+//     } else if (maxAge <= 70) {
+//       baseRate = 7; // 7% for age 60-70
+//     } else if (maxAge <= 80) {
+//       baseRate = 8; // 8% for age 70-80
+//     } else if (maxAge <= 90) {
+//       baseRate = 9; // 9% for age 80-90
+//     }  else if (maxAge <= 100) {
+//       baseRate = 10; // 9% for age 80-90
+//     } else {
+//       baseRate = 1; // 10% for age 90-100
+//     }
+
+//     return baseRate;
+//   };
+
+//   // Function to calculate initial premium
+//   const calculateInitialPremium = () => {
+//     const baseRate = calculateBaseRate(age);
+//     return (sumAssured * baseRate) / 100;
+//   };
+
+//   // Effect to update the initial and final premiums when sumAssured, age, or preExisting changes
+
+
+//   // Function to get the premium based on selected duration
+//   const getPremiumForDuration = (years) => {
+//     let premium = initialPremium;
+
+//     // Adjust premium based on selected duration
+//     if (years === 1) {
+//       return premium + preExistingAmount;  // Base amount for 1 year
+//     } else if (years === 2) {
+//       const discount = premium * (5 / 100);
+//       const discountedPremium = premium - discount;  // Apply 5% discount to the initial premium
+//       return (discountedPremium * 2) + preExistingAmount;  // Double the discounted premium for 2 years
+//     } else if (years === 3) {
+//       const discount = premium * (10 / 100)
+//       const discountedPremium = premium - discount;  // Apply 10% discount to the initial premium
+//       return (discountedPremium * 3) + preExistingAmount;  // Triple the discounted premium for 3 years
+//     }
+//   };
+
+//   // Effect to update the final premium when selectedDuration changes
+//   useEffect(() => {
+//     const premiumForSelectedDuration = getPremiumForDuration(
+//       selectedDuration === "1 Year"
+//         ? 1
+//         : selectedDuration === "2 Years"
+//           ? 2
+//           : 3
+//     );
+
+//     // navigate("/review"); 
+
+//     setFinalPremium(premiumForSelectedDuration);
+//   }, [selectedDuration, initialPremium, preExistingAmount]);
+
+//   const relationData = useSelector(
+//     (state) => state.relations.selectedRelations
+//   );
+//   const diseaseData = useSelector(
+//     (state) => state.relations.disease
+//   );
+
+
+
+
+//   const allRelations = [...relationData].filter(
+//     (relation) => relation
+//   );
+//   // allRelations.map((data)=>{console.log(data)})
+//   // console.log(diseaseData, ageDataFind)
+//    const [costumerdetails,setcustomerdetails]=useState([]);
+
+//   const value = Cookies.get("MobileNumber");
+//   useEffect(()=>{
+//     axios.get('http://183.82.106.55:9100/register/fetch/'+value).then((res)=>{
+//       // console.log(res.data);
+//       setcustomerdetails(res.data);
+//     },[value])
+//   });
+
+//   const username = costumerdetails.fullName
+//   ? costumerdetails.fullName.charAt(0).toUpperCase() + costumerdetails.fullName.slice(1)
+//   : '';
+
+//   const customerId = costumerdetails.customerId || 'Not Available';
+
+//   useEffect(() => {
+//     const mobNo = Cookies.get("MobileNumber");
+//     axios
+//       .get(`http://183.82.106.55:9100/register/fetch/${mobNo}`)
+//       .then((res) => {
+//         setcustomerdetails(res.data);
+//         setData((prevData) =>
+//           prevData.map((item) => ({ ...item, CustomerId: res.data.customerId }))
+//         );
+//       })
+//       .catch((error) => {
+//            console.error("Error fetching customer details:", error);
+//       });
+//   }, []);
+
+//   // console.log("Pre-existing condition:", preExisting);
+//   // console.log("Calculated Pre-Existing Diseases Amount:", preExistingAmount);
+//   useEffect(() => {
+//     // setAge(ageDataFind);
+//     const initial = calculateInitialPremium();
+//     setInitialPremium(initial);
+
+//      diseaseData=="Yes" ? setPreExisting(true):setPreExisting(false)
+
+//     // Calculate the amount due to pre-existing diseases
+//     const preExistingCost = preExisting ? (sumAssured * 1) / 100 : 0;
+//     setPreExistingAmount(preExistingCost);
+
+//     // Set the final premium, including pre-existing disease adjustment
+//     setFinalPremium(initial + preExistingCost);
+//   }, [sumAssured, age, preExisting]);
+
+//return (
+//     <div>
+//       <div>
+//         <Nav />
+//         <div className="quotation-page">
+//           <main className="body">
+//             <div className="left-section">
+
+//               <p><strong>Insurance Type : Individual</strong></p>
+
+//               {/* <h2>John Doe</h2> */}
+//               <h2>{username}</h2>
+
+//               <h3>Age : {ageDataFind} </h3>
+
+//               <div className="field-spacing"></div> 
+
+//               {/* <p><strong>Customer ID:</strong> {StoreData[index].CustomerId}</p> */}
+//               <p><strong>Customer ID:</strong> {customerId}</p>
+
+//               <div className="field-spacing"></div> 
+
+//                <h3>Pre-Existing Diseases : {diseaseData}</h3>
+
+//                <div className="field-spacing"></div> 
+
+//               <h2>Premium Amount : ₹{finalPremium.toLocaleString()}</h2>
+//               {/* <p>₹{finalPremium.toLocaleString()}</p> */}
+
+//               <div className="field-spacing"></div>
+
+//               <h2>Pre-Existing Diseases Amount : ₹{preExistingAmount.toLocaleString()}</h2>
+
+
+//             </div>
+
+//             <div className="right-section">
+//               <h3>Sum Assured</h3>
+//               <p className="amount-display">₹{sumAssured.toLocaleString()}</p>
+//               <input
+//                 type="range"
+//                 min="500000"
+//                 max="2500000"
+//                 step="500000"
+//                 value={sumAssured}
+//                 onChange={(e) => setSumAssured(Number(e.target.value))}
+//               />
+
+//               <div className="premium-card">
+//                 <h4>Initial Premium Amount Per Year</h4>
+//                 <p>₹{initialPremium.toLocaleString()}</p>
+//               </div>
+
+//               <div className="premium-card">
+//                 <h4>Final Premium Amount Per Year (after disease adjustment)</h4>
+//                 <p>₹{finalPremium.toLocaleString()}</p>
+//               </div>
+
+//               <div className="discount-cards">
+//                 {["1 Year", "2 Years", "3 Years"].map((duration, index) => {
+//                   const years = index + 1;
+//                   return (
+//                     <button
+//                       key={duration}
+//                       className={`duration-button ${selectedDuration === duration ? "selected" : ""
+//                         }`}
+//                       onClick={() => setSelectedDuration(duration)}
+//                     >
+//                       <h5>{duration}</h5>
+//                       <p>₹{getPremiumForDuration(years).toLocaleString()}</p>
+//                     </button>
+//                   );
+//                 })}
+//               </div>
+
+//               <button
+//                 className="proceed-button"
+//                 onClick={() =>
+//                   alert(
+//                     `Proceeding with ${selectedDuration} premium: ₹${getPremiumForDuration(
+//                       selectedDuration === "1 Year"
+//                         ? 1
+//                         : selectedDuration === "2 Years"
+//                           ? 2
+//                           : 3
+//                     ).toLocaleString()}`
+//                   )
+//                 }
+//               >
+//                 Proceed
+//               </button>
+//             </div>
+//           </main>
+//         </div>
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default Quotation;
+
+
+
+
+import React, { useState, useEffect } from "react";
+import Nav from "../../nav/Nav";
+import Footer from "../../nav/Footer";
+import "./Quotation.css";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
+const Quotation = () => {
+  const [sumAssured, setSumAssured] = useState(500000);
+  const [age, setAge] = useState(""); // Start with an empty string for user input
+  const [preExisting, setPreExisting] = useState(false);
+  const [selectedDuration, setSelectedDuration] = useState("1 Year");
+  const [initialPremium, setInitialPremium] = useState(0);
+  const [finalPremium, setFinalPremium] = useState(0);
+  const [preExistingAmount, setPreExistingAmount] = useState(0);
+  const [data, setData] = useState();
+  const ageData = useSelector((state) => state.relations.age); // This is an array of age ranges
+  const navigate = useNavigate();
+
+  // Get the first element in the array (assuming ageData contains age ranges as strings)
+  const selectedAge = ageData[0] ? ageData[0].Age : 0;
+
+  // Function to calculate the base rate based on the age
+  const calculateBaseRate = (selectedAge) => {
+    let baseRate = 0;
+    if (selectedAge <= 30) {
+      baseRate = 1; // 1% for age 0-30
+    } else if (selectedAge <= 35) {
+      baseRate = 2; // 2% for age 30-35
+    } else if (selectedAge <= 40) {
+      baseRate = 3; // 3% for age 35-40
+    } else if (selectedAge <= 45) {
+      baseRate = 4; // 4% for age 40-45
+    } else if (selectedAge <= 50) {
+      baseRate = 5; // 5% for age 45-50
+    } else if (selectedAge <= 60) {
+      baseRate = 6; // 6% for age 50-60
+    } else if (selectedAge <= 70) {
+      baseRate = 7; // 7% for age 60-70
+    } else if (selectedAge <= 80) {
+      baseRate = 8; // 8% for age 70-80
+    } else if (selectedAge <= 90) {
+      baseRate = 9; // 9% for age 80-90
+    } else if (selectedAge <= 100) {
+      baseRate = 10; // 10% for age 90-100
+    } else {
+      baseRate = 1; // Default rate for age >100
+    }
+
+        return baseRate;
+       };
+
+  // useEffect(() => {
+  //   const initial = calculateInitialPremium();
+  //   setInitialPremium(initial);
+  //   diseaseData=="Yes" ? setPreExisting(true):setPreExisting(false)
+
+  //   // Adjust for pre-existing conditions
+  //   const preExistingCost = preExisting ? (sumAssured * 1) / 100 : 0;
+  //   setPreExistingAmount(preExistingCost);
+  //   setFinalPremium(initial + preExistingCost);
+  // }, [sumAssured, selectedAge, preExisting]);
+
+  const relationData = useSelector((state) => state.relations.selectedRelations);
+  const diseaseData = useSelector((state) => state.relations.disease);
+
+  const [costumerdetails, setCustomerdetails] = useState([]);
+
+  const value = Cookies.get("MobileNumber");
+  useEffect(() => {
+    axios.get('http://183.82.106.55:9100/register/fetch/' + value).then((res) => {
+      setCustomerdetails(res.data);
+    });
+  }, [value]);
+
+  const username = costumerdetails.fullName ? costumerdetails.fullName.charAt(0).toUpperCase() + costumerdetails.fullName.slice(1) : '';
+  const customerId = costumerdetails.customerId || 'Not Available';
+
+  useEffect(() => {
+    console.log("Selected Age:", selectedAge);
+    console.log("Initial Premium:", initialPremium);
+    console.log("Pre-existing Amount:", preExistingAmount);
+    console.log("Sum Assured:", sumAssured);
+    console.log("Selected Duration:", selectedDuration);
+    
+    const premiumForSelectedDuration = getPremiumForDuration(
+      selectedDuration === "1 Year"
+        ? 1
+        : selectedDuration === "2 Years"
+        ? 2
+        : 3
+    );
+    setFinalPremium(premiumForSelectedDuration);
+  }, [selectedDuration, initialPremium, preExistingAmount, sumAssured, preExisting]);
+  
+    const baseRate = calculateBaseRate(age);
+    return (sumAssured * baseRate) / 100;
+  };
+
+  // Effect to update the initial and final premiums when sumAssured, age, or preExisting changes
+  useEffect(() => {
+    const initial = calculateInitialPremium();
+    setInitialPremium(initial);
+
+    // Calculate the amount due to pre-existing diseases
+    const preExistingCost = preExisting ? (sumAssured * 1) / 100 : 0;
+    setPreExistingAmount(preExistingCost);
+
+    // Set the final premium, including pre-existing disease adjustment
+    setFinalPremium(initial + preExistingCost);
+  }, [sumAssured, age, preExisting]);
+
+  // Function to get the premium based on selected duration
+  const getPremiumForDuration = (years) => {
+    let premium = initialPremium;
+
+    // Adjust premium based on selected duration
+    if (years === 1) {
+      return premium + preExistingAmount; // Base amount for 1 year
+    } else if (years === 2) {
+      const discount = premium * (5 / 100);
+      const discountedPremium = premium - discount; // Apply 5% discount to the initial premium
+      return discountedPremium * 2 + preExistingAmount; // Double the discounted premium for 2 years
+    } else if (years === 3) {
+      const discount = premium * (10 / 100);
+      const discountedPremium = premium - discount; // Apply 10% discount to the initial premium
+      return discountedPremium * 3 + preExistingAmount; // Triple the discounted premium for 3 years
+    }
+  };
+
+  // Effect to update the final premium when selectedDuration changes
+  useEffect(() => {
+    const premiumForSelectedDuration = getPremiumForDuration(
+      selectedDuration === "1 Year"
+        ? 1
+        : selectedDuration === "2 Years"
+          ? 2
+          : 3
+    );
+
+    // navigate("/review"); 
+
+    setFinalPremium(premiumForSelectedDuration);
+  }, [selectedDuration, initialPremium, preExistingAmount]);
+
+  const relationData = useSelector(
+    (state) => state.relations.selectedRelations
+  );
+  const diseaseData = useSelector(
+    (state) => state.relations.disease
+  );
+
+  const ageData = useSelector(
+    (state) => state.relations.age
+  );
+  const ageDataFind = ageData.map((data) => data.Age);
+
+
+  const allRelations = [...relationData].filter(
+    (relation) => relation
+  );
+  // allRelations.map((data)=>{console.log(data)})
+  // console.log(diseaseData, ageDataFind)
+   const [costumerdetails,setcustomerdetails]=useState([]);
+
+  const value = Cookies.get("MobileNumber");
+  useEffect(()=>{
+    axios.get('http://183.82.106.55:9100/register/fetch/'+value).then((res)=>{
+      // console.log(res.data);
+      setcustomerdetails(res.data);
+    },[value])
+  });
+  
+  const username = costumerdetails.fullName
+  ? costumerdetails.fullName.charAt(0).toUpperCase() + costumerdetails.fullName.slice(1)
+  : '';
+
+  const customerId = costumerdetails.customerId || 'Not Available';
+
+  useEffect(() => {
+    const mobNo = Cookies.get("MobileNumber");
+    axios
+      .get(`http://183.82.106.55:9100/register/fetch/${mobNo}`)
+      .then((res) => {
+        setCustomerDetails(res.data);
+        setData((prevData) =>
+          prevData.map((item) => ({ ...item, CustomerId: res.data.customerId }))
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching customer details:", error);
+      });
+  }, []);
+  
+  // console.log("Pre-existing condition:", preExisting);
+  // console.log("Calculated Pre-Existing Diseases Amount:", preExistingAmount);
+
+return (
+    <div>
+      <div>
+        <Nav />
+        <div className="quotation-page">
+          <main className="body">
+            <div   className="left-section">
+
+              <p><strong>Insurance Type : Individual</strong></p>
+              <div className="field-spacing"></div>
+
+              <h2>{username}</h2>
+              <div className="field-spacing"></div>
+
+              <h3>Age : {selectedAge}</h3>
+              <div className="field-spacing"></div>
+
+              <p><strong>Customer ID:</strong> {customerId}</p>
+              <div className="field-spacing"></div>
+
+              <h3>Pre-Existing Diseases : {diseaseData}</h3>
+              <div className="field-spacing"></div>
+
+              <h2>Premium Amount : ₹{finalPremium.toLocaleString()}</h2>
+              <div className="field-spacing"></div>
+
+              <h2>Pre-Existing Diseases Amount : ₹{preExistingAmount.toLocaleString()}</h2>
+              <div className="field-spacing"></div>
+              
+            </div>
+
+              <p><strong>Insurance Type : Individual</strong></p>
+
+              {/* <h2>John Doe</h2> */}
+              <h2>{username}</h2>
+
+              <h3>Age : {ageDataFind} </h3>
+
+              <div className="field-spacing"></div> 
+
+              {/* <p><strong>Customer ID:</strong> {StoreData[index].CustomerId}</p> */}
+              {/* <p><strong>Customer ID:</strong> {costumerdetails.CustomerId || "Not Available"}</p> */}
+              <p><strong>Customer ID:</strong> {customerId}</p>
+
+              <div className="field-spacing"></div> 
+
+               <h3>Pre-Existing Diseases : {diseaseData}</h3>
+
+               <div className="field-spacing"></div> 
+
+              <h2>Premium Amount : ₹{finalPremium.toLocaleString()}</h2>
+              {/* <p>₹{finalPremium.toLocaleString()}</p> */}
+
+              <div className="field-spacing"></div>
+
+              <h2>Pre-Existing Diseases Amount : ₹{preExistingAmount.toLocaleString()}</h2>
+              {/* <p>₹{preExistingAmount.toLocaleString()}</p> */}
+              
+              {/* <h2>Pre-Existing Diseases Amount: ₹{preExistingAmount ? preExistingAmount.toLocaleString() : "0"}</h2> */}
+              
+              {/* {preExisting && (
+  <h2>Pre-Existing Diseases Amount : ₹{preExistingAmount.toLocaleString()}</h2>
+)} */}
+            </div>
+
+            <div className="right-section">
+              <h3>Sum Assured</h3>
+              <p className="amount-display">₹{sumAssured.toLocaleString()}</p>
+              <input
+                type="range"
+                min="500000"
+                max="2500000"
+                step="500000"
+                value={sumAssured}
+                onChange={(e) => setSumAssured(Number(e.target.value))}
+              />
+
+              <div className="premium-card">
+                <h4>Initial Premium Amount Per Year</h4>
+                <p>₹{initialPremium.toLocaleString()}</p>
+              </div>
+
+              <div className="premium-card">
+                <h4>Final Premium Amount Per Year (after disease adjustment)</h4>
+                <p>₹{finalPremium.toLocaleString()}</p>
+              </div>
+
+              <div className="discount-cards">
+                {["1 Year", "2 Years", "3 Years"].map((duration, index) => {
+                  const years = index + 1;
+                  return (
+                    <button
+                      key={duration}
+                      className={`duration-button ${selectedDuration === duration ? "selected" : ""}`}
+                      className={`duration-button ${selectedDuration === duration ? "selected" : ""
+                        }`}
+                      onClick={() => setSelectedDuration(duration)}
+                    >
+                      <h5>{duration}</h5>
+                      <p>₹{getPremiumForDuration(years).toLocaleString()}</p>
+                    </button>
+                  );
+                })}
+              </div>
+              <button
+                className="proceed-button"
+                onClick={() =>
+                  alert(
+                    `Proceeding with ${selectedDuration} premium: ₹${getPremiumForDuration(
+                      selectedDuration === "1 Year"
+                        ? 1
+                        : selectedDuration === "2 Years"
+                          ? 2
+                          : 3
+                    ).toLocaleString()}`
+                  )
+                }
+              >
+                Proceed
+              </button>
+            </div>
+          </main>
+        </div>
+       </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default Quotation;
+
+
+
+
+import React, { useState } from "react";
+import { Stack, Button, IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import p1 from "../../../images/p3.jpeg";
+import FacebookIcon from "@mui/icons-material/Facebook";
+// import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Cookies from 'js-cookie';
+import './Family.css';
+import { useDispatch } from "react-redux";
+import { setSelectedRelations } from "../../../../storage/relationsSlice";
+
+function Family() {
+   
+  const dispatch = useDispatch();
+
+  // const [usergender, setUserGender] = useState("");
+  // taking Gender Dynamically
+  
+  const usergender = Cookies.get('UserDetails');
+
+  // Taking Insurance Type Dynamic
+// const [insurenceType, setInsurenceType] = useState("Individual");
+const insurenceType = Cookies.get('insuranceType');
+
+console.log(insurenceType);
+  const [MultipleRelation, setMultipleRelation] = useState([]);
+  const [relationName, setRelationname] = useState("");
+  
+  const [selectedButton, setSelectedButton] = useState(null);
+  const [showMoreMembers, setShowMoreMembers] = useState(false);
+
+  // Store Son and Daughter details in arrays
+  const [sonDetails, setSonDetails] = useState([]);
+  const [daughterDetails, setDaughterDetails] = useState([]);
+
+  const navigate = useNavigate(); // Initialize navigate
+
+
+  const handleButtonClick = (button, relation) => {
+    setSelectedButton(button);
+    setRelationname(relation);
+  };
+
+  const [userName, setUserName] = useState(Cookies.get('UserName') || ""); // Fetch username from cookies
+
+  const handleToggleRelation = (relation) => {
+    if (insurenceType === "Individual") {
+      // For Individual type, allow selecting Daughter and Son as well
+      setMultipleRelation([relation]);
+    } else {
+      // For other types, allow multiple relations
+      setMultipleRelation((prev) =>
+        prev.includes(relation)
+          ? prev.filter((item) => item !== relation)
+          : [...prev, relation]
+      );
+    }
+  };
+
+  const toggleShowMoreMembers = () => {
+    setShowMoreMembers(true); // Always show more members
+  };
+
+  // const isContinueButtonEnabled = MultipleRelation.length > 0;
+
+  const handleContinue = () => {
+    if (isContinueButtonEnabled) {
+      const combinedData = [
+        ...MultipleRelation,
+        ...sonDetails,
+        ...daughterDetails,
+      ];
+      dispatch(setSelectedRelations(combinedData));
+      navigate("/page"); // Navigate to the desired route
+    }
+  };
+
+  const isContinueButtonEnabled = insurenceType === "Individual"
+  ? (
+    MultipleRelation.length > 0 || daughterDetails.length > 0 || sonDetails.length > 0  // Ensure that at least one relation or daughter/son detail is selected
+    
+    )
+  : (
+    (MultipleRelation.length + daughterDetails.length + sonDetails.length) >= 2
+    );
+
+  // MultipleRelation.length > 0 || (daughterDetails.length > 0 || sonDetails.length > 0);
+
+  //   const isContinueButtonEnabled =
+  // (insurenceType == "Family" && MultipleRelation.length >= 2);
+  // (insurenceType == "Individual" && MultipleRelation.length === 1);
+
+
+  // const isContinueButtonEnabled =
+  // (insurenceType === "Family" &&
+  //   MultipleRelation.length === 2 &&
+  //   MultipleRelation.every(relation => relation === "daughter" || relation === "son")) ||
+  // (insurenceType === "Individual" && MultipleRelation.length === 1);
+
+
+  const imageSelfIcon =
+    usergender === "male"
+    // usergender === "Male"
+      ? "https://cdn-icons-png.flaticon.com/512/3070/3070663.png"
+      : "https://thumb.ac-illust.com/be/bee98c70d1cfc02d0f387d2852464bf5_t.jpeg";
+
+  const imageHusbandIcon =
+    usergender === "male"
+    // usergender === "Male"
+      ? "https://thumb.ac-illust.com/be/bee98c70d1cfc02d0f387d2852464bf5_t.jpeg"
+      : "https://cdn-icons-png.flaticon.com/512/3070/3070663.png";
+
+  const relationValue = usergender === "male" ? "Wife" : "Husband";
+  // const usergender = Cookies.get('UserDetails');
+//  const formattedGender = usergender
+  //  ? usergender.charAt(0).toUpperCase() + usergender.slice(1).toLowerCase(): "";
+
+//   const usergender = Cookies.get('UserDetails');
+// const formattedGender = usergender
+//   ? usergender.charAt(0).toUpperCase() + usergender.slice(1).toLowerCase()
+//   : "";
+
+
+  // Handle increment and decrement for Daughter and Son with a limit of 4
+  const handleIncrement = (relation) => {
+    if (relation === "Daughter" && daughterDetails.length < 4) {
+      setDaughterDetails((prevDetails) => [...prevDetails, "Daughter"]);
+    }
+    if (relation === "Son" && sonDetails.length < 4) {
+      setSonDetails((prevDetails) => [...prevDetails, "Son"]);
+    }
+  };
+
+  const handleDecrement = (relation) => {
+    if (relation === "Daughter" && daughterDetails.length > 0) {
+      setDaughterDetails((prevDetails) => prevDetails.slice(0, -1));
+    }
+    if (relation === "Son" && sonDetails.length > 0) {
+      setSonDetails((prevDetails) => prevDetails.slice(0, -1));
+    }
+  };
+
+  console.log("Daughter Details:", daughterDetails);
+  console.log("Son Details:", sonDetails);
+
+  console.log(MultipleRelation);
+
+  Cookies.set('RelatioData',MultipleRelation);
+
+  return (
+    <div>
+      <div style={{ height: "100%" }}>
+        <nav className="navbar navbar-light bg-light">
+          <div className="ms-4">
+            <img
+              src={p1}
+              alt="Logo"
+              width="180px"
+              height="45px"
+            />
+          </div>
+
+          <div className="d-flex align-items-center me-4">
+            <AccountCircleIcon fontSize="large" className="text-dark" />
+          </div>
+        </nav>
+      </div>
+      <div>
+        <div className="text-center mt-3">
+          <h1 style={{ fontSize: "30px" }}>Covered Relations</h1>
+        </div>
+        {/* <div className="text-center fs-5">
+          <h5>Gender: {usergender }</h5>
+        </div> */}
+
+       {/* <div className="text-center fs-5">
+       <h5>Gender: {usergender ? usergender.charAt(0).toUpperCase() + usergender.slice(1) : ""}</h5>
+       </div> */}
+
+         <div className=" type text-center fs-5">
+          {/* <p>Insurance Type: {insurenceType}</p> */}
+          <p><strong>Insurance Type:</strong> {insurenceType}</p>
+         </div> 
+
+        <div style={{ marginTop: "50px", textAlign: "center" }}>
+          <Stack spacing={2} direction="row" justifyContent="center">
+            <Button
+              variant={MultipleRelation.includes("Self") ? "contained" : "outlined"}
+              style={{
+                width: "150px",
+                height: "80px",
+                border: "2px solid black",
+              }}
+              onClick={() => handleToggleRelation("Self")}
+              startIcon={
+                <img
+                  src={imageSelfIcon}
+                  alt="Self"
+                  style={{ width: "28px", height: "28px" }}
+                />
+              }
+            >
+                {/* {MultipleRelation.includes("Self") && insurenceType === "Individual"
+    ? userName // Display username if Self is selected and insurance type is Individual
+    : "Self"} */}
+
+              Self
+            </Button>
+            <Button
+              variant={MultipleRelation.includes(relationValue) ? "contained" : "outlined"}
+              style={{
+                width: "150px",
+                height: "80px",
+                border: "2px solid black",
+              }}
+              onClick={() => handleToggleRelation(relationValue)}
+              startIcon={
+                <img
+                  src={imageHusbandIcon}
+                  alt="Husband"
+                  style={{ width: "28px", height: "28px" }}
+                />
+              }
+            >
+              {relationValue}
+            </Button>
+            <Button
+              variant={MultipleRelation.includes("Mother") ? "contained" : "outlined"}
+              style={{
+                width: "150px",
+                height: "80px",
+                border: "2px solid black",
+              }}
+              onClick={() => handleToggleRelation("Mother")}
+              startIcon={
+                <img
+                  src="https://png.pngtree.com/png-vector/20220210/ourlarge/pngtree-avatar-female-character-mother-png-image_4384454.png"
+                  alt="Mother"
+                  style={{ width: "28px", height: "28px" }}
+                />
+              }
+            >
+              Mother
+            </Button>
+            <Button
+              variant={MultipleRelation.includes("Father") ? "contained" : "outlined"}
+              style={{
+                width: "150px",
+                height: "80px",
+                border: "2px solid black",
+              }}
+              onClick={() => handleToggleRelation("Father")}
+              startIcon={
+                <img
+                  src="https://www.icon0.com/free/static2/preview2/stock-photo-indian-man-avatar-people-icon-character-cartoon-32890.jpg"
+                  alt="Father"
+                  style={{ width: "28px", height: "28px" }}
+                />
+              }
+            >
+              Father
+            </Button>
+          </Stack>
+          <div style={{ marginTop: "35px", padding: "32px" }}>
+            <Stack spacing={2} direction="row" justifyContent="center">
+              {/* Daughter Button with Increment/Decrement */}
+              <div>
+                {insurenceType === "Family" ? ( 
+                  <div>
+                    <div
+                      style={{
+                        width: "150px",
+                        height: "100px",
+                         border: "2px solid black",
+                        textAlign: "center",
+                        borderRadius: "8px",
+                        padding: "10px",
+                        color:"black",
+                        // backgroundColor: daughterDetails.length > 0 ? "contained" : "blue",
+                        // border: daughterDetails.length > 0 ? "2px solid black" : "2px solid black",
+
+                      }}
+                    >
+                      <img
+                        src="https://img.freepik.com/premium-vector/daughter-icon-vector-image-can-be-used-family-life_120816-219665.jpg?w=360"
+                        alt="Daughter"
+                        style={{ width: "28px", height: "28px" }}
+                      />
+                      <p className="text-primary">DAUGHTER</p>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <button
+                          onClick={() => handleDecrement("Daughter")}
+                          disabled={daughterDetails.length <= 0}
+                          style={{
+                            padding: "0 10px",
+                            fontSize: "16px",
+                            cursor: daughterDetails.length > 0 ? "pointer" : "not-allowed",
+                          }}
+                        >
+                          -
+                        </button>
+                        <span style={{ margin: "0 10px" }}>{daughterDetails.length}</span>
+                        <button
+                          onClick={() => handleIncrement("Daughter")}
+                          disabled={daughterDetails.length >= 4}
+                          style={{
+                            padding: "0 10px",
+                            fontSize: "16px",
+                            cursor: daughterDetails.length < 4 ? "pointer" : "not-allowed",
+                          }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <Button
+                      // variant={MultipleRelation.length>0 ? "contained" : "outlined"}
+                       // variant={sonDetails.length > 0 ? "contained" : "outlined"}
+                      variant={MultipleRelation.includes("Daughter") ? "contained" : "outlined"}
+                      // variant={daughterDetails.length>0 ? "contained" : "outlined"}
+                      style={{
+                        width: "150px",
+                        height: "80px",
+                        border: "2px solid black",
+                      }}
+                      onClick={() => handleToggleRelation("Daughter")}
+                      startIcon={
+                        <img
+                          src="https://img.freepik.com/premium-vector/daughter-icon-vector-image-can-be-used-family-life_120816-219665.jpg?w=360"
+                          alt="Daughter"
+                          style={{ width: "28px", height: "28px" }}
+                        />
+                      }
+                    >
+                      Daughter
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Son Button with Increment/Decrement */}
+              <div>
+                {insurenceType === "Family" ? (
+                  <div>
+                    <div
+                      style={{
+                        width: "150px",
+                        height: "100px",
+                        border: "2px solid black",
+                        // border: sonDetails.length > 0 ? "3px solid blue" : "2px solid black",
+                        textAlign: "center",
+                        borderRadius: "8px",
+                        padding: "10px",
+                        // backgroundColor: sonDetails.length > 0 ? "#f0f8ff" : "white",
+
+                      }}
+                    >
+                      <img
+                        src="https://cdn-icons-png.freepik.com/512/7084/7084418.png"
+                        alt="Son"
+                        style={{ width: "28px", height: "28px" }}
+                      />
+                      <p className="text-primary">SON</p>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <button
+                          onClick={() => handleDecrement("Son")}
+                          disabled={sonDetails.length <= 0}
+                          style={{
+                            padding: "0 10px",
+                            fontSize: "16px",
+                            cursor: sonDetails.length > 0 ? "pointer" : "not-allowed",
+                          }}
+                        >
+                          -
+                        </button>
+                        <span style={{ margin: "0 10px" }}>{sonDetails.length}</span>
+                        <button
+                          onClick={() => handleIncrement("Son")}
+                          disabled={sonDetails.length >= 4}
+                          style={{
+                            padding: "0 10px",
+                            fontSize: "16px",
+                            cursor: sonDetails.length < 4 ? "pointer" : "not-allowed",
+                          }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <Button
+                      // variant={sonDetails.length > 0 ? "contained" : "outlined"}
+                      variant={MultipleRelation.includes("Son") ? "contained" : "outlined"}
+                      // variant={sonDetails.length > 0 ? "contained" : "outlined"}
+                      style={{
+                        width: "155px",
+                        height: "80px",
+                        border: "2px solid black",
+                      }}
+                      onClick={() => handleToggleRelation("Son")}
+                      startIcon={
+                        <img
+                          src="https://cdn-icons-png.freepik.com/512/7084/7084418.png"
+                          alt="Son"
+                          style={{ width: "28px", height: "28px" }}
+                        />
+                      }
+                    >
+                      Son
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </Stack>
+          </div>
+
+          {showMoreMembers && (
+            <div style={{ marginTop: "35px", padding: "32px" }}>
+              <Stack spacing={2} direction="row" justifyContent="center">
+                <Button
+                  variant={MultipleRelation.includes("Grandmother") ? "contained" : "outlined"}
+                  style={{
+                    width: "170px",
+                    height: "80px",
+                    border: "2px solid black",
+                  }}
+                  onClick={() => handleToggleRelation("Grandmother")}
+                  startIcon={
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/4395/4395811.png"
+                      alt="Grandmother"
+                      style={{ width: "28px", height: "28px" }}
+                    />
+                  }
+                >
+                  Grandmother
+                </Button>
+                <Button
+                  variant={MultipleRelation.includes("Grandfather") ? "contained" : "outlined"}
+                  style={{
+                    width: "165px",
+                    height: "80px",
+                    border: "2px solid black",
+                  }}
+                  onClick={() => handleToggleRelation("Grandfather")}
+                  startIcon={
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/2829/2829817.png"
+                      alt="Grandfather"
+                      style={{ width: "28px", height: "28px" }}
+                    />
+                  }
+                >
+                  Grandfather
+                </Button> 
+
+                
+                <Button
+                  variant={MultipleRelation.includes("Father-in-Law") ? "contained" : "outlined"}
+                  style={{
+                    width: "180px",
+                    height: "80px",
+                    border: "2px solid black",
+                  }}
+                  onClick={() => handleToggleRelation("Father-in-Law")}
+                  startIcon={
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/256/1663/1663005.png"
+                      alt="Father-in-Law"
+                      style={{ width: "28px", height: "28px" }}
+                    />
+                  }
+                >
+                  Father-in-Law
+                </Button>
+                <Button
+                  variant={MultipleRelation.includes("Mother-in-Law") ? "contained" : "outlined"}
+                  style={{
+                    width: "180px",
+                    height: "80px",
+                    border: "2px solid black",
+                
+                  }}
+                  onClick={() => handleToggleRelation("Mother-in-Law")}
+                  startIcon={
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/6872/6872417.png"
+                      alt="Mother-in-Law"
+                      style={{ width: "28px", height: "28px" }}
+                    />
+                  }
+                >
+                  Mother-in-Law
+                </Button>
+              </Stack>
+            </div>
+          )}
+          <div style={{ textAlign: "center", marginTop: "20px" }}>
+            {!showMoreMembers && (
+              <a href="#" onClick={toggleShowMoreMembers}>
+                Show More Members
+              </a>
+            )}
+          </div>
+
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <Button
+              variant="contained"
+              color="warning"
+              disabled={!isContinueButtonEnabled}
+              style={{ width: "200px", height: "50px" }}
+              onClick={handleContinue} // Added onClick to trigger navigation
+
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      </div>
+      
+      <footer
+        className="bg-light text-center py-1  mt-5"
+        style={{
+          // bottom: 700,
+          width: "100%",
+        }}
+      >
+        <div className="d-flex justify-content-center mb-2">
+          <IconButton href="https://facebook.com" target="_blank" color="primary">
+            <FacebookIcon />
+          </IconButton>
+          {/* <IconButton href="https://twitter.com" target="_blank" color="primary">
+            <TwitterIcon />
+          </IconButton> */}
+            <IconButton href="https://twitter.com" target="_blank" color="primary">
+         <img
+         src="https://allpngfree.com/apf-prod-storage-api/storage/thumbnails/twitter-new-logo-png-transparent-images-thumbnail-1697953256.jpg" // Replace with the official "X" logo URL
+        alt="X"
+        style={{ width: '24px', height: '24px' }}
+      />
+      </IconButton>
+          <IconButton href="https://instagram.com" target="_blank" color="secondary">
+            <InstagramIcon />
+          </IconButton>
+          <IconButton href="https://wa.me" target="_blank" color="success">
+            <WhatsAppIcon />
+          </IconButton>
+        </div>
+        <p>
+          © All Rights Reserved 2024.{" "}
+          <span className="text-danger fw-bold">RamanaSoft</span>
+        </p>
+      </footer>
+    </div>
+  );
+}
+export default Family;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

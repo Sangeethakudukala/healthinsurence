@@ -21,7 +21,7 @@ function Routing(){
     <Route path="/page" element={<Relation/>} />
     {/* <Route path="/you" element={<Quotation/>} /> */}
     <Route path="/you" element={<Quotationinfo />} />
-    {/* <Route path="/review" element={<Review />} /> */}
+    <Route path="/review" element={<Review />} />
 
 
 

@@ -1,4 +1,5 @@
 
+
 import React, { useState } from "react";
 import { Stack, Button, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
@@ -116,9 +117,10 @@ console.log(insurenceType);
 
   const relationValue = usergender === "male" ? "Wife" : "Husband";
 
-  // const usergender = Cookies.get('UserDetails');
-//  const formattedGender = usergender
-  //  ? usergender.charAt(0).toUpperCase() + usergender.slice(1).toLowerCase(): "";
+//   const usergender = Cookies.get('UserDetails');
+// const formattedGender = usergender
+//   ? usergender.charAt(0).toUpperCase() + usergender.slice(1).toLowerCase()
+//   : "";
 
 
   // Handle increment and decrement for Daughter and Son with a limit of 4
@@ -263,7 +265,6 @@ console.log(insurenceType);
           </Stack>
           <div style={{ marginTop: "35px", padding: "32px" }}>
             <Stack spacing={2} direction="row" justifyContent="center">
-
               {/* Daughter Button with Increment/Decrement */}
               <div>
                 {insurenceType === "Family" ? ( 
@@ -324,8 +325,7 @@ console.log(insurenceType);
                 ) : (
                   <div>
                     <Button
-                      // variant={MultipleRelation.length>0 ? "contained" : "outlined"}
-                       // variant={sonDetails.length > 0 ? "contained" : "outlined"}
+                      // variant={daughterDetails.length>0 ? "contained" : "outlined"}
                       variant={MultipleRelation.includes("Daughter") ? "contained" : "outlined"}
                       style={{
                         width: "150px",
@@ -571,4 +571,3 @@ console.log(insurenceType);
   );
 }
 export default Family;
-

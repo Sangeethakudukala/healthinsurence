@@ -9,7 +9,8 @@ import Cookies from 'js-cookie';
 
 const Quotationfamily = () => {
   const [sumAssured, setSumAssured] = useState(500000);
-  const [familySize, setFamilySize] = useState(0); // Default to 2 members
+  // const [familySize, setFamilySize] = useState(0); // Default to 2 members
+  const [familySize, setFamilySize] = useState(2); // Default to 2 members
   const [preExisting, setPreExisting] = useState(0); // User-provided pre-existing condition length (in years), allows 0
   const [selectedDuration, setSelectedDuration] = useState("1 Year"); // Default selected duration
   const [initialPremium, setInitialPremium] = useState(0); // To store the initial premium amount
@@ -21,14 +22,43 @@ const Quotationfamily = () => {
     return 2; // Flat rate for the family size (2% of sum assured per member)
   };
 
+
    const navigate = useNavigate();
+   const handleProceedClick = () => {
+    // Show the alert
+    alert(
+      `Proceeding with ${selectedDuration} premium: ₹${getPremiumForDuration(
+        selectedDuration === "1 Year"
+          ? 1
+          : selectedDuration === "2 Years"
+          ? 2
+          : 3
+      ).toLocaleString()}`
+    );
+    
+    // After the alert is dismissed, navigate to the next page
+    navigate('/review'); // Replace '/next-page' with the desired target path
+  };
+
 
   // Function to calculate initial premium
   const calculateInitialPremium = () => {
     return (sumAssured * familySize) / 100;
   };
 
- 
+  // Effect to update the initial and final premiums when sumAssured, familySize, or preExisting changes
+  useEffect(() => {
+    const initial = calculateInitialPremium();
+    setInitialPremium(initial);
+
+    // Calculate the amount due to pre-existing diseases
+    const preExistingCost = preExisting ?((sumAssured)*( 1/ 100)): 0;
+    setPreExistingAmount(preExistingCost);
+
+    // Set the final premium, including pre-existing disease adjustment
+    setFinalPremium(initial + preExistingCost);
+  }, [sumAssured, familySize, preExisting]);
+
   // Function to get the premium based on selected duration
   const getPremiumForDuration = (years) => {
     let premium = initialPremium;
@@ -74,9 +104,7 @@ const Quotationfamily = () => {
   const diseaseData = useSelector(
     (state) => state.relations.disease
   );
-  
-
-  // navigate("/review"); 
+   
 
   const allRelations = [...relationData].filter(
     (relation) => relation
@@ -116,14 +144,13 @@ const Quotationfamily = () => {
     setFinalPremium(initial + preExistingCost);
   }, [sumAssured, familySize, preExisting]);
 
-
   return (
     <div>
       <Nav/>
     <div className="quotation-page">
       <main className="body">
         <div className="left-section">
-
+      
         <p><strong>Insurance Type : Family </strong></p>
         <div className="field-spacing"></div> 
 
@@ -133,24 +160,21 @@ const Quotationfamily = () => {
           {/* <p>Insurance Type: Family</p> */}
 
           <h3>Family Size : {allRelations.length}</h3>
-         
           <div className="field-spacing"></div> 
 
           <p><strong>Customer ID:</strong> {customerId}</p>
-
           <div className="field-spacing"></div> 
 
           <h3>Pre-Existing Diseases : {diseaseData} </h3>
-          
           <div className="field-spacing"></div> 
           
           <h2>Premium Amount : ₹{finalPremium.toLocaleString()}</h2>
           {/* <p>₹{finalPremium.toLocaleString()}</p> */}
-
           <div className="field-spacing"></div> 
 
           <h2>Pre-Existing Diseases Amount : ₹{preExistingAmount.toLocaleString()}</h2>
           {/* <p>₹{preExistingAmount.toLocaleString()}</p> Display pre-existing disease premium */}
+          <div className="field-spacing"></div>
         </div>
 
         <div className="right-section">
@@ -210,17 +234,16 @@ const Quotationfamily = () => {
 
           <button
             className="proceed-button"
-            onClick={() =>
-              alert(
-                `Proceeding with ${selectedDuration} premium: ₹${getPremiumForDuration(
-                  selectedDuration === "1 Year"
-                    ? 1
-                    : selectedDuration === "2 Years"
-                    ? 2
-                    : 3
-                ).toLocaleString()}`
-              )
-            }
+            onClick={handleProceedClick}
+              // alert(
+              //   `Proceeding with ${selectedDuration} premium: ₹${getPremiumForDuration(
+              //     selectedDuration === "1 Year"
+              //       ? 1
+              //       : selectedDuration === "2 Years"
+              //       ? 2
+              //       : 3
+              //   ).toLocaleString()}`
+              // )
           >
             Proceed
           </button>
