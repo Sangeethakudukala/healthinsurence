@@ -1,35 +1,26 @@
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Stack, Button, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import p1 from "../../../images/p3.jpeg";
-import FacebookIcon from "@mui/icons-material/Facebook";
-// import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Nav from "../../nav/Nav";
 import Cookies from 'js-cookie';
 import './Family.css';
 import { useDispatch } from "react-redux";
 import { setSelectedRelations } from "../../../../storage/relationsSlice";
+import Footer from "../../nav/Footer";
 
 function Family() {
-   
+
   const dispatch = useDispatch();
 
-  // const [usergender, setUserGender] = useState("");
-  // taking Gender Dynamically
-  
   const usergender = Cookies.get('UserDetails');
 
-  // Taking Insurance Type Dynamic
-// const [insurenceType, setInsurenceType] = useState("Individual");
-const insurenceType = Cookies.get('insuranceType');
 
-console.log(insurenceType);
+  const insurenceType = sessionStorage.getItem('typeOfInsurance');
+
+  console.log(insurenceType);
   const [MultipleRelation, setMultipleRelation] = useState([]);
   const [relationName, setRelationname] = useState("");
-  
+
   const [selectedButton, setSelectedButton] = useState(null);
   const [showMoreMembers, setShowMoreMembers] = useState(false);
 
@@ -75,51 +66,100 @@ console.log(insurenceType);
         ...daughterDetails,
       ];
       dispatch(setSelectedRelations(combinedData));
+      sessionStorage.setItem("selectedRelation", JSON.stringify(combinedData));
+
       navigate("/page"); // Navigate to the desired route
     }
   };
+  console.log(MultipleRelation);
+  const [insuranceType, setInsuranceType] = useState("individual");
 
+  useEffect(() => {
+    const storedInsuranceType = sessionStorage.getItem("typeOfInsurance");
+    const currentInsuranceType = storedInsuranceType || "Individual";
+    console.log(currentInsuranceType)
+    if (currentInsuranceType === "Individual") {
+      console.log("Processing individual insurance type");
+      // Handle individual-specific logic here
+      const data = sessionStorage.getItem("selectedRelation");
+      const ipdata = data ? JSON.parse(data) : [];
+      console.log(ipdata);
+
+      let selectedRelation = ipdata.length > 0 ? [ipdata[0]] : []; // Allow only the first relation
+      console.log("Selected relation for individual:", selectedRelation);
+
+      const relation = selectedRelation[0]; // Only one relation is allowed
+      if (relation === "Daughter") {
+        setDaughterDetails([relation]);
+        setSonDetails([]);
+        setMultipleRelation([]);
+      } else if (relation === "Son") {
+        setSonDetails([relation]);
+        setDaughterDetails([]);
+        setMultipleRelation([]);
+      } else {
+        setMultipleRelation([relation]);
+        setDaughterDetails([]);
+        setSonDetails([]);
+      }
+
+    } else if (currentInsuranceType === "Family") {
+      console.log("Processing family insurance type");
+
+      const data = sessionStorage.getItem("selectedRelation");
+      const ipdata = data ? JSON.parse(data) : [];
+      console.log(ipdata);
+
+      const newDaughterDetails = [];
+      const newSonDetails = [];
+      const newMultipleRelation = [];
+
+      ipdata.forEach((element) => {
+        console.log(element); // Debug log
+        if (element === "Daughter") {
+          newDaughterDetails.push(element);
+        } else if (element === "Son") {
+          newSonDetails.push(element);
+        } else {
+          newMultipleRelation.push(element);
+        }
+      });
+
+      // Update states
+      setDaughterDetails(newDaughterDetails);
+      setSonDetails(newSonDetails);
+      setMultipleRelation(newMultipleRelation);
+    }
+  }, [insuranceType]);
+
+  console.log(MultipleRelation);
   const isContinueButtonEnabled = insurenceType === "Individual"
-  ? (
-    MultipleRelation.length > 0 || daughterDetails.length > 0 || sonDetails.length > 0  // Ensure that at least one relation or daughter/son detail is selected
-    
+    ? (
+      MultipleRelation.length > 0 || daughterDetails.length > 0 || sonDetails.length > 0  // Ensure that at least one relation or daughter/son detail is selected
+
     )
-  : (
-    (MultipleRelation.length + daughterDetails.length + sonDetails.length) >= 2
+    : (
+      (MultipleRelation.length + daughterDetails.length + sonDetails.length) >= 2
     );
 
-  // MultipleRelation.length > 0 || (daughterDetails.length > 0 || sonDetails.length > 0);
-
-  //   const isContinueButtonEnabled =
-  // (insurenceType == "Family" && MultipleRelation.length >= 2);
-  // (insurenceType == "Individual" && MultipleRelation.length === 1);
 
 
-  // const isContinueButtonEnabled =
-  // (insurenceType === "Family" &&
-  //   MultipleRelation.length === 2 &&
-  //   MultipleRelation.every(relation => relation === "daughter" || relation === "son")) ||
-  // (insurenceType === "Individual" && MultipleRelation.length === 1);
 
 
   const imageSelfIcon =
     usergender === "male"
-    // usergender === "Male"
+      // usergender === "Male"
       ? "https://cdn-icons-png.flaticon.com/512/3070/3070663.png"
       : "https://thumb.ac-illust.com/be/bee98c70d1cfc02d0f387d2852464bf5_t.jpeg";
 
   const imageHusbandIcon =
     usergender === "male"
-    // usergender === "Male"
+      // usergender === "Male"
       ? "https://thumb.ac-illust.com/be/bee98c70d1cfc02d0f387d2852464bf5_t.jpeg"
       : "https://cdn-icons-png.flaticon.com/512/3070/3070663.png";
 
   const relationValue = usergender === "male" ? "Wife" : "Husband";
 
-//   const usergender = Cookies.get('UserDetails');
-// const formattedGender = usergender
-//   ? usergender.charAt(0).toUpperCase() + usergender.slice(1).toLowerCase()
-//   : "";
 
 
   // Handle increment and decrement for Daughter and Son with a limit of 4
@@ -146,25 +186,13 @@ console.log(insurenceType);
 
   console.log(MultipleRelation);
 
-  Cookies.set('RelatioData',MultipleRelation);
+  Cookies.set('RelatioData', MultipleRelation);
 
   return (
     <div>
-      <div style={{ height: "100%" }}>
-        <nav className="navbar navbar-light bg-light">
-          <div className="ms-4">
-            <img
-              src={p1}
-              alt="Logo"
-              width="180px"
-              height="45px"
-            />
-          </div>
+      <div>
 
-          <div className="d-flex align-items-center me-4">
-            <AccountCircleIcon fontSize="large" className="text-dark" />
-          </div>
-        </nav>
+        <Nav />
       </div>
       <div>
         <div className="text-center mt-3">
@@ -174,14 +202,14 @@ console.log(insurenceType);
           <h5>Gender: {usergender }</h5>
         </div> */}
 
-       {/* <div className="text-center fs-5">
+        {/* <div className="text-center fs-5">
        <h5>Gender: {usergender ? usergender.charAt(0).toUpperCase() + usergender.slice(1) : ""}</h5>
        </div> */}
 
-         <div className=" type text-center fs-5">
+        <div className=" type text-center fs-5">
           {/* <p>Insurance Type: {insurenceType}</p> */}
           <p><strong>Insurance Type:</strong> {insurenceType}</p>
-         </div> 
+        </div>
 
         <div style={{ marginTop: "50px", textAlign: "center" }}>
           <Stack spacing={2} direction="row" justifyContent="center">
@@ -201,7 +229,7 @@ console.log(insurenceType);
                 />
               }
             >
-                {/* {MultipleRelation.includes("Self") && insurenceType === "Individual"
+              {/* {MultipleRelation.includes("Self") && insurenceType === "Individual"
     ? userName // Display username if Self is selected and insurance type is Individual
     : "Self"} */}
 
@@ -266,17 +294,17 @@ console.log(insurenceType);
             <Stack spacing={2} direction="row" justifyContent="center">
               {/* Daughter Button with Increment/Decrement */}
               <div>
-                {insurenceType === "Family" ? ( 
+                {insurenceType === "Family" ? (
                   <div>
                     <div
                       style={{
                         width: "150px",
                         height: "100px",
-                         border: "2px solid black",
+                        border: "2px solid black",
                         textAlign: "center",
                         borderRadius: "8px",
                         padding: "10px",
-                        color:"black",
+                        color: "black",
                         // backgroundColor: daughterDetails.length > 0 ? "contained" : "blue",
                         // border: daughterDetails.length > 0 ? "2px solid black" : "2px solid black",
 
@@ -324,7 +352,8 @@ console.log(insurenceType);
                 ) : (
                   <div>
                     <Button
-                      variant={daughterDetails.length>0 ? "contained" : "outlined"}
+                      // variant={daughterDetails.length>0 ? "contained" : "outlined"}
+                      variant={MultipleRelation.includes("Daughter") ? "contained" : "outlined"}
                       style={{
                         width: "150px",
                         height: "80px",
@@ -404,7 +433,8 @@ console.log(insurenceType);
                 ) : (
                   <div>
                     <Button
-                      variant={sonDetails.length > 0 ? "contained" : "outlined"}
+                      // variant={sonDetails.length > 0 ? "contained" : "outlined"}
+                      variant={MultipleRelation.includes("Son") ? "contained" : "outlined"}
                       style={{
                         width: "155px",
                         height: "80px",
@@ -465,9 +495,9 @@ console.log(insurenceType);
                   }
                 >
                   Grandfather
-                </Button> 
+                </Button>
 
-                
+
                 <Button
                   variant={MultipleRelation.includes("Father-in-Law") ? "contained" : "outlined"}
                   style={{
@@ -492,7 +522,7 @@ console.log(insurenceType);
                     width: "180px",
                     height: "80px",
                     border: "2px solid black",
-                
+
                   }}
                   onClick={() => handleToggleRelation("Mother-in-Law")}
                   startIcon={
@@ -530,8 +560,8 @@ console.log(insurenceType);
           </div>
         </div>
       </div>
-      
-      <footer
+
+      {/* <footer
         className="bg-light text-center py-1  mt-5"
         style={{
           // bottom: 700,
@@ -542,16 +572,14 @@ console.log(insurenceType);
           <IconButton href="https://facebook.com" target="_blank" color="primary">
             <FacebookIcon />
           </IconButton>
-          {/* <IconButton href="https://twitter.com" target="_blank" color="primary">
-            <TwitterIcon />
-          </IconButton> */}
-            <IconButton href="https://twitter.com" target="_blank" color="primary">
-         <img
-         src="https://allpngfree.com/apf-prod-storage-api/storage/thumbnails/twitter-new-logo-png-transparent-images-thumbnail-1697953256.jpg" // Replace with the official "X" logo URL
-        alt="X"
-        style={{ width: '24px', height: '24px' }}
-      />
-      </IconButton>
+         
+          <IconButton href="https://twitter.com" target="_blank" color="primary">
+            <img
+              src="https://allpngfree.com/apf-prod-storage-api/storage/thumbnails/twitter-new-logo-png-transparent-images-thumbnail-1697953256.jpg" // Replace with the official "X" logo URL
+              alt="X"
+              style={{ width: '24px', height: '24px' }}
+            />
+          </IconButton>
           <IconButton href="https://instagram.com" target="_blank" color="secondary">
             <InstagramIcon />
           </IconButton>
@@ -563,9 +591,9 @@ console.log(insurenceType);
           © All Rights Reserved 2024.{" "}
           <span className="text-danger fw-bold">RamanaSoft</span>
         </p>
-      </footer>
+      </footer> */}
+      <Footer />
     </div>
   );
 }
 export default Family;
-

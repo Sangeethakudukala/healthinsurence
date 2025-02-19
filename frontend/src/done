@@ -1,0 +1,2095 @@
+  {/* House No */}
+                {/* <div className="mb-2">
+                <label htmlFor="houseNo" className="form-label">House No:</label>
+                <input type="text" id="houseNo" className="form-control" placeholder="Enter House No" required />
+              </div> */}
+
+                {/* Street */}
+                {/* <div className="mb-2">
+                <label htmlFor="street" className="form-label">Street:</label>
+                <input type="text" id="street" className="form-control" placeholder="Enter Street" required />
+              </div> */}
+
+                {/* State */}
+                {/* <div className="mb-2">
+                <label htmlFor="state" className="form-label">State:</label>
+                <select id="state" className="form-select" value={selectedState} onChange={handleStateChange} required>
+                  <option value="">Select State</option>
+                  <option value="All">All States</option>
+                  {Object.keys(stateCityMap).map((state) => (
+                    <option key={state} value={state}>{state}</option>
+                  ))}
+                </select>
+              </div> */}
+
+                {/* City */}
+                {/* <div className="mb-2">
+                <label htmlFor="city" className="form-label">City:</label>
+                <select id="city" className="form-select" required disabled={!selectedState}>
+                  <option value="">Select City</option>
+                  {cities.map((city) => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
+              </div> */}
+
+                {/* Pincode */}
+                {/* <div className="mb-2">
+                <label htmlFor="pincode" className="form-label">Pincode:</label>
+                <input
+                  id="pincode"
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter Pincode"
+                  value={pincode}
+                  onChange={handlePincodeChange}
+                  required
+                />
+                {error && <p className="text-danger text-sm mt-1">{error}</p>}
+              </div> */}
+
+                {/* Make Payment Button */}
+                {/* <div className="text-center mt-4"> */}
+                {/* <Button variant="contained" onClick={handleClick}>Make Payment</Button> */}
+                {/* <Button variant="contained">Make Payment</Button>
+              </div> */}
+
+
+
+
+
+
+
+
+              // import React, { useState, useEffect } from "react";
+// import Nav from "../../nav/Nav";
+// import Footer from "../../nav/Footer";
+// import axios from 'axios';
+// import Cookies from 'js-cookie';
+
+// const MyAccount = () => {
+//   const [editable, setEditable] = useState(false);
+//   const [user, setUser] = useState({
+//     fullName: "",
+//     mobile: "",
+//     address: "",
+//     email: ""
+//   });
+
+//   const [customerDetails, setCustomerDetails] = useState({});
+//   const mobileNumber = Cookies.get("MobileNumber"); // Get MobileNumber from Cookies
+
+//   // Fetch customer details from API
+//   useEffect(() => {
+//     if (mobileNumber) {
+//       axios.get(`http://183.82.106.55:9100/register/fetch/${mobileNumber}`)
+//         .then((res) => {
+//           console.log("API Response:", res.data); // Debugging log
+//           setCustomerDetails(res.data);
+//         })
+//         .catch((err) => console.error("Error fetching user details:", err));
+//     } else {
+//       console.error("No mobile number found in cookies");
+//     }
+//   }, [mobileNumber]);
+
+//   // Update user state when customerDetails are fetched
+//   useEffect(() => {
+//     if (customerDetails && Object.keys(customerDetails).length > 0) {
+//       setUser({
+//         fullName: customerDetails.fullName || "",
+//         mobile: customerDetails.mobile || mobileNumber || "", // Fallback to mobileNumber from cookies
+//         address: customerDetails.address || "",
+//         email: customerDetails.email || ""
+//       });
+//     }
+//   }, [customerDetails]);
+
+//   const handleChange = (e) => {
+//     setUser({ ...user, [e.target.name]: e.target.value });
+//   };
+
+//   return (
+//     <div>
+//       <Nav />
+//       <div className="container w-75 mt-4">
+//         <div className="card p-4 shadow-sm">
+//           <h2 className="card-title text-center fw-bold mb-3">My Account</h2>
+//           <div className="card-body">
+//             <div className="mb-3">
+//               <label className="form-label fs-10 fw-bold">Full Name</label>
+//               <input type="text" className="form-control" name="fullName" value={user.fullName} disabled={!editable} onChange={handleChange} />
+//             </div>
+//             <div className="mb-3">
+//               <label className="form-label fs-10 fw-bold">Mobile</label>
+//               <input type="text" className="form-control" name="mobile" value={user.mobile} disabled={!editable} onChange={handleChange} />
+//             </div>
+//             <div className="mb-3">
+//               <label className="form-label fs-10 fw-bold">Address</label>
+//               <input type="text" className="form-control" name="address" value={user.address} disabled={!editable} onChange={handleChange} />
+//             </div>
+//             <div className="mb-3">
+//               <label className="form-label fs-10 fw-bold">Email</label>
+//               <input type="text" className="form-control" name="email" value={user.email} disabled={!editable} onChange={handleChange} />
+//             </div>
+
+//             <div className="text-center mt-3">
+//               {editable ? (
+//                 <>
+//                   <button className="btn btn-primary me-2" onClick={() => setEditable(false)}>Save Changes</button>
+//                   <button className="btn btn-secondary" onClick={() => setEditable(false)}>Cancel</button>
+//                 </>
+//               ) : (
+//                 <button className="btn btn-success" style={{ width: "100px" }} onClick={() => setEditable(true)}>Edit</button>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default MyAccount;
+
+
+
+
+
+
+import React, { useState, useEffect } from "react";
+import Nav from "../../nav/Nav";
+import Footer from "../../nav/Footer";
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
+const MyAccount = () => {
+  const [editable, setEditable] = useState(false);
+  const [user, setUser] = useState({
+    fullName: "",
+    mobile: "",
+    address: "",
+    email: ""
+  });
+
+  const [customerDetails, setCustomerDetails] = useState({});
+  const [errors, setErrors] = useState({}); // For storing validation errors
+
+  const mobileNumber = Cookies.get("MobileNumber"); // Get MobileNumber from Cookies
+
+  // Fetch customer details from API
+  useEffect(() => {
+    if (mobileNumber) {
+      axios.get(`http://183.82.106.55:9100/register/fetch/${mobileNumber}`)
+        .then((res) => {
+          console.log("API Response:", res.data); // Debugging log
+          setCustomerDetails(res.data);
+        })
+        .catch((err) => console.error("Error fetching user details:", err));
+    } else {
+      console.error("No mobile number found in cookies");
+    }
+  }, [mobileNumber]);
+
+  // Update user state when customerDetails are fetched
+  useEffect(() => {
+    if (customerDetails && Object.keys(customerDetails).length > 0) {
+      setUser({
+        fullName: customerDetails.fullName || "",
+        mobile: customerDetails.mobile || mobileNumber || "", // Fallback to mobileNumber from cookies
+        address: customerDetails.address || "",
+        email: customerDetails.email || ""
+      });
+    }
+  }, [customerDetails]);
+
+  const handleChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
+  // **Validation Function**
+  // const validateForm = () => {
+  //   let newErrors = {};
+
+  //   if (!user.fullName.trim()) {
+  //     newErrors.fullName = "Full Name is required.";
+  //   } else if (user.fullName.length < 3) {
+  //     newErrors.fullName = "Full Name must be at least 3 characters.";
+  //   }
+
+  //   if (!user.mobile.trim()) {
+  //     newErrors.mobile = "Mobile Number is required.";
+  //   } else if (!/^\d{10}$/.test(user.mobile)) {
+  //     newErrors.mobile = "Mobile Number must be exactly 10 digits.";
+  //   }
+
+  //   if (!user.address.trim()) {
+  //     newErrors.address = "Address is required.";
+  //   } else if (user.address.length < 5) {
+  //     newErrors.address = "Address must be at least 5 characters.";
+  //   }
+
+  //   if (!user.email.trim()) {
+  //     newErrors.email = "Email is required.";
+  //   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)) {
+  //     newErrors.email = "Enter a valid email address.";
+  //   }
+
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
+
+  const validateForm = () => {
+    let newErrors = {};
+  
+    // Full Name: Only alphabets, at least 3 characters
+    if (!user.fullName.trim()) {
+      newErrors.fullName = "Full Name is required.";
+    } else if (!/^[A-Za-z\s]{3,}$/.test(user.fullName)) {
+      newErrors.fullName = "Full Name must contain only alphabets and be at least 3 characters.";
+    }
+  
+    // Mobile Number: Only 10 digits allowed
+    if (!user.mobile.trim()) {
+      newErrors.mobile = "Mobile Number is required.";
+    } else if (!/^\d{10}$/.test(user.mobile)) {
+      newErrors.mobile = "Mobile Number must be exactly 10 digits.";
+    }
+  
+    // Address: At least 5 characters
+    if (!user.address.trim()) {
+      newErrors.address = "Address is required.";
+    } else if (user.address.length < 5) {
+      newErrors.address = "Address must be at least 5 characters.";
+    }
+  
+    // Email: Only lowercase and must be a valid format
+    if (!user.email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(user.email)) {
+      newErrors.email = "Enter a valid lowercase email (e.g., example@domain.com).";
+    }
+  
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
+
+  // **Save Changes with Validation**
+  const handleSave = () => {
+    if (validateForm()) {
+      setEditable(false);
+      console.log("Form is valid. Saving changes...", user);
+      // Here you can add API call to update user details
+    } else {
+      console.log("Form has errors. Fix them before saving.");
+    }
+  };
+
+  return (
+    <div>
+      <Nav />
+      <div className="container w-75 mt-4">
+        <div className="card p-4 shadow-sm">
+          <h2 className="card-title text-center fw-bold mb-3">My Account</h2>
+          <div className="card-body">
+            <div className="mb-3">
+              <label className="form-label fs-10 fw-bold">Full Name</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                name="fullName" 
+                value={user.fullName} 
+                disabled={!editable} 
+                onChange={handleChange} 
+              />
+              {errors.fullName && <small className="text-danger">{errors.fullName}</small>}
+            </div>
+            <div className="mb-3">
+              <label className="form-label fs-10 fw-bold">Mobile</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                name="mobile" 
+                value={user.mobile} 
+                disabled={!editable} 
+                onChange={handleChange} 
+              />
+              {errors.mobile && <small className="text-danger">{errors.mobile}</small>}
+            </div>
+            <div className="mb-3">
+              <label className="form-label fs-10 fw-bold">Address</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                name="address" 
+                value={user.address} 
+                disabled={!editable} 
+                onChange={handleChange} 
+              />
+              {errors.address && <small className="text-danger">{errors.address}</small>}
+            </div>
+            <div className="mb-3">
+              <label className="form-label fs-10 fw-bold">Email</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                name="email" 
+                value={user.email} 
+                disabled={!editable} 
+                onChange={handleChange} 
+              />
+              {errors.email && <small className="text-danger">{errors.email}</small>}
+            </div>
+
+            <div className="text-center mt-3">
+              {editable ? (
+                <>
+                  <button className="btn btn-primary me-2" onClick={handleSave}>Save Changes</button>
+                  <button className="btn btn-secondary" onClick={() => setEditable(false)}>Cancel</button>
+                </>
+              ) : (
+                <button className="btn btn-success" style={{ width: "100px" }} onClick={() => setEditable(true)}>Edit</button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer/>
+    </div>
+  );
+};
+
+export default MyAccount;
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import Nav from "../../nav/Nav";
+// import Footer from "../../nav/Footer";
+// import axios from 'axios';
+// import Cookies from 'js-cookie';
+
+// const MyAccount = () => {
+//   const [editMode, setEditMode] = useState({
+//     fullName: false,
+//     mobile: false,
+//     email: false,
+//     houseNumber: false,
+//     street: false,
+//     city: false,
+//     state: false,
+//     pincode: false,
+//   });
+
+//   const [user, setUser] = useState({
+//     fullName: "",
+//     mobile: "",
+//     email: "",
+//     houseNumber: "",
+//     street: "",
+//     city: "",
+//     state: "",
+//     pincode: "",
+//   });
+
+//   const [tempUser, setTempUser] = useState({});
+//   const [errors, setErrors] = useState({});
+//   const mobileNumber = Cookies.get("MobileNumber");
+//   const Details = "";
+
+// useEffect(() => {
+//     if (mobileNumber) {
+//       axios.get(`http://183.82.106.55:9100/register/fetch/${mobileNumber}`)
+//         .then((res) => {
+//           console.log("API Response:", res.data);
+
+//           const userData = {
+//             fullName: res.data.fullName || "",
+//             mobile: res.data.mobile || mobileNumber,
+//             email: res.data.email || "",
+//             Details: res.data.customerId || ""
+//           };
+
+//           setUser(userData);
+//           setTempUser({
+//             fullName: res.data.fullName || "",
+//             mobile: res.data.mobile || mobileNumber,
+//             email: res.data.email || "",
+//           });
+
+//           // Now, fetch additional details
+//           return axios.get(`http://183.82.106.55:9100/policy/customerdetails/${res.data.customerId}`);
+//         })
+//         .then((res1) => {
+//           console.log("API Response:", res1.data);
+
+//           const addressData = {
+//             houseNumber: res1.data.houseNo || "",
+//             street: res1.data.street || "",
+//             city: res1.data.city || "",
+//             state: res1.data.state || "",
+//             pincode: res1.data.pincode || ""
+//           };
+
+//           // Set both user and tempUser data
+//           setUser(prevState => ({
+//             ...prevState,
+//             ...addressData
+//           }));
+//           setTempUser(addressData);
+//         })
+//         .catch((err) => {
+//           console.error("Error fetching user details:", err);
+//         });
+//     }
+//   }, [mobileNumber]);
+
+//   const validateForm = (field, value) => {
+//     let errorMsg = "";
+//     if (field === "fullName") {
+//       if (!value.trim()) errorMsg = "Full Name is required.";
+//       else if (!/^[A-Za-z\s]{3,}$/.test(value)) errorMsg = "Full Name must be at least 3 characters and contain only alphabets.";
+//     }
+//     if (field === "mobile") {
+//       if (!value.trim()) errorMsg = "Mobile Number is required.";
+//       else if (!/^\d{10}$/.test(value)) errorMsg = "Mobile Number must be exactly 10 digits.";
+//     }
+//     if (field === "email") {
+//       if (!value.trim()) errorMsg = "Email is required.";
+//       else if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(value)) errorMsg = "Enter a valid lowercase email.";
+//     }
+//     setErrors((prevErrors) => ({ ...prevErrors, [field]: errorMsg }));
+//     return !errorMsg;
+//   };
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setTempUser({ ...tempUser, [name]: value });
+//   };
+
+//   const handleSave = (field) => {
+//     if (validateForm(field, tempUser[field])) {
+//       setUser(tempUser);
+//       setEditMode((prev) => ({ ...prev, [field]: false }));
+//     }
+//   };
+
+//   const handleCancel = (field) => {
+//     setTempUser(user);
+//     setEditMode((prev) => ({ ...prev, [field]: false }));
+//   };
+
+//   console.log(user)
+
+//   return (
+//     <div>
+//       <Nav />
+//       <div className="container w-75 mt-4 d-flex justify-content-between">
+//         <div className="card p-4 shadow-sm w-75 me-4">
+//           <h2 className="card-title text-center fw-bold mb-3">My Account</h2>
+//           <div className="card-body">
+//             {/* Full Name */}
+//             <div className="mb-3">
+//               <label className="form-label fw-bold">Full Name</label>
+//               <div className="d-flex">
+//                 <input
+//                   type="text"
+//                   className="form-control"
+//                   name="fullName"
+//                   value={tempUser.fullName}
+//                   disabled={!editMode.fullName}
+//                   onChange={handleChange}
+//                   style={{ width: "80%", height: "40px" }}
+//                 />
+//                 {editMode.fullName ? (
+//                   <>
+//                     <button className="btn btn-primary ms-2" onClick={() => handleSave("fullName")}>Save</button>
+//                     <button className="btn btn-secondary ms-2" onClick={() => handleCancel("fullName")}>Cancel</button>
+//                   </>
+//                 ) : (
+//                   <button className="btn btn-success ms-2" onClick={() => setEditMode({ ...editMode, fullName: true })}>Edit</button>
+//                 )}
+//               </div>
+//               {errors.fullName && <small className="text-danger">{errors.fullName}</small>}
+//             </div>
+
+//             {/* Mobile Number */}
+//             <div className="mb-3">
+//               <label className="form-label fw-bold">Mobile</label>
+//               <div className="d-flex">
+//                 <input
+//                   type="text"
+//                   className="form-control"
+//                   name="mobile"
+//                   value={tempUser.mobile}
+//                   disabled={!editMode.mobile}
+//                   onChange={handleChange}
+//                   style={{ width: "80%", height: "40px" }}
+//                 />
+//                 {editMode.mobile ? (
+//                   <>
+//                     <button className="btn btn-primary ms-2" onClick={() => handleSave("mobile")}>Save</button>
+//                     <button className="btn btn-secondary ms-2" onClick={() => handleCancel("mobile")}>Cancel</button>
+//                   </>
+//                 ) : (
+//                   <button className="btn btn-success ms-2" onClick={() => setEditMode({ ...editMode, mobile: true })}>Edit</button>
+//                 )}
+//               </div>
+//               {errors.mobile && <small className="text-danger">{errors.mobile}</small>}
+//             </div>
+
+//             {/* Email */}
+//             <div className="mb-3">
+//               <label className="form-label fw-bold">Email</label>
+//               <div className="d-flex">
+//                 <input
+//                   type="text"
+//                   className="form-control"
+//                   name="email"
+//                   value={tempUser.email}
+//                   disabled={!editMode.email}
+//                   onChange={handleChange}
+//                   style={{ width: "80%", height: "40px" }}
+//                 />
+//                 {editMode.email ? (
+//                   <>
+//                     <button className="btn btn-primary ms-2" onClick={() => handleSave("email")}>Save</button>
+//                     <button className="btn btn-secondary ms-2" onClick={() => handleCancel("email")}>Cancel</button>
+//                   </>
+//                 ) : (
+//                   <button className="btn btn-success ms-2" onClick={() => setEditMode({ ...editMode, email: true })}>Edit</button>
+//                 )}
+//               </div>
+//               {errors.email && <small className="text-danger">{errors.email}</small>}
+//             </div>
+//           </div>
+//         </div>
+
+
+//         {/* Address Details */}
+//         <div className="card p-5 shadow-sm w-75">
+//           <h2 className="card-title text-center fw-bold mb-3">Address Details</h2>
+//           <div className="card-body">
+//             {["HouseNo", "Street", "State", "City", "Pincode"].map((field) => (
+//               <div className="mb-3" key={field}>
+//                 <label className="form-label fw-bold">{field.replace(/([A-Z])/g, " $1")}</label>
+//                 <div className="d-flex">
+//                   <input
+//                     type="text"
+//                     className="form-control"
+//                     name={field}
+//                     value={tempUser[field]}
+//                     disabled={!editMode.address}
+//                     onChange={handleChange}
+//                     style={{ width: "100%", height: "40px" }}
+//                   />
+//                 </div>
+//               </div>
+//             ))}
+//             {/* Edit Button */}
+//             {!editMode.address ? (
+//               <button
+//                 className="btn btn-success ms-2"
+//                 onClick={() => setEditMode((prev) => ({ ...prev, address: true }))}
+//               >
+//                 Edit
+//               </button>
+//             ) : (
+//               <>
+//                 <button className="btn btn-primary ms-2" onClick={() => handleSave("address")}>Save</button>
+//                 <button className="btn btn-secondary ms-2" onClick={() => handleCancel("address")}>Cancel</button>
+//               </>
+//             )}
+//           </div>
+//         </div>
+
+
+//       </div>
+
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default MyAccount;
+
+
+
+
+
+return (
+  <div>
+    <Nav />
+    <div className="container d-flex flex-column align-items-center mt-4">
+      
+      {/* My Account Section (Always Displayed First) */}
+      <div className="card p-4 shadow-sm w-50 mx-auto mb-4">
+        <h2 className="text-center fw-bold">My Account</h2>
+        <div className="card-body">
+          {["fullName", "mobile", "email"].map((field) => (
+            <div className="mb-3" key={field}>
+              <label className="form-label fw-bold">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+              <div className="d-flex">
+                <input
+                  type="text"
+                  className="form-control"
+                  name={field}
+                  value={tempUser[field]}
+                  disabled={!editMode[field]}
+                  onChange={handleChange}
+                  style={{ width: "70%", height: "35px" }} // Reduced width & height
+                />
+                {editMode[field] ? (
+                  <>
+                    <button className="btn btn-primary ms-2" onClick={() => handleSave(field)}>
+                      <FaCheck />
+                    </button>
+                    <button className="btn btn-secondary ms-2" onClick={() => handleCancel(field)}>
+                      <FaTimes />
+                    </button>
+                  </>
+                ) : (
+                  <button className="btn btn-success ms-2" onClick={() => setEditMode({ ...editMode, [field]: true })}>
+                    <FaEdit />
+                  </button>
+                )}
+              </div>
+              {errors[field] && <small className="text-danger">{errors[field]}</small>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Address Section (Shown Below If Available) */}
+      {user.houseNumber || user.street || user.city || user.state || user.pincode ? (
+        <div className="card p-4 shadow-sm w-50 mx-auto">
+          <h2 className="text-center fw-bold">Address Details</h2>
+          <div className="card-body">
+            {["houseNumber", "street", "city", "state", "pincode"].map((field) => (
+              <div className="mb-3" key={field}>
+                <label className="form-label fw-bold">
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
+                </label>
+                <div className="d-flex">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name={field}
+                    value={tempUser[field]}
+                    disabled={!editMode.address}
+                    onChange={handleChange}
+                    style={{ width: "70%", height: "35px" }} // Reduced width & height
+                  />
+                </div>
+              </div>
+            ))}
+            {editMode.address ? (
+              <>
+                <button className="btn btn-primary ms-2" onClick={() => handleSave("address")}>
+                  <FaCheck />
+                </button>
+                <button className="btn btn-secondary ms-2" onClick={() => handleCancel("address")}>
+                  <FaTimes />
+                </button>
+              </>
+            ) : (
+              <button className="btn btn-success ms-2" onClick={() => setEditMode({ ...editMode, address: true })}>
+                <FaEdit />
+              </button>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="p-3 text-center border border-danger text-danger fw-bold mb-4 w-50 mx-auto">
+          No address found.
+        </div>
+      )}
+
+    </div>
+    <Footer />
+  </div>
+);
+
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import Nav from "../../nav/Nav";
+// import Footer from "../../nav/Footer";
+// import axios from "axios";
+// import Cookies from "js-cookie";
+// import { FaEdit, FaCheck, FaTimes } from "react-icons/fa"; // Icons for buttons
+
+// const MyAccount = () => {
+//   const [editMode, setEditMode] = useState({});
+//   const [user, setUser] = useState({});
+//   const [tempUser, setTempUser] = useState({});
+//   const [errors, setErrors] = useState({});
+//   const mobileNumber = Cookies.get("MobileNumber");
+
+//   useEffect(() => {
+//     if (mobileNumber) {
+//       axios.get(`http://183.82.106.55:9100/register/fetch/${mobileNumber}`)
+//         .then((res) => {
+//           const userData = {
+//             fullName: res.data.fullName || "",
+//             mobile: res.data.mobile || mobileNumber,
+//             email: res.data.email || "",
+//             gender: res.data.gender || "", // Fetch gender from API
+//             customerId: res.data.customerId || "",
+//           };
+//           setUser(userData);
+//           setTempUser(userData);
+//           return axios.get(`http://183.82.106.55:9100/policy/customerdetails/${res.data.customerId}`);
+//         })
+//         .then((res1) => {
+//           const addressData = {
+//             houseNumber: res1.data.houseNo || "",
+//             street: res1.data.street || "",
+//             city: res1.data.city || "",
+//             state: res1.data.state || "",
+//             pincode: res1.data.pincode || "",
+//           };
+//           setUser((prev) => ({ ...prev, ...addressData }));
+//           setTempUser((prev) => ({ ...prev, ...addressData }));
+//         })
+//         .catch((err) => console.error("Error fetching user details:", err));
+//     }
+//   }, [mobileNumber]);
+
+//   const validateForm = (field, value) => {
+//     let errorMsg = "";
+//     if (field === "fullName" && (!value.trim() || value.length < 3)) {
+//       errorMsg = "Full Name must be at least 3 characters.";
+//     }
+//     if (field === "mobile" && !/^\d{10}$/.test(value)) {
+//       errorMsg = "Mobile Number must be 10 digits.";
+//     }
+//     if (field === "email" && !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(value)) {
+//       errorMsg = "Enter a valid lowercase email.";
+//     }
+//     setErrors((prev) => ({ ...prev, [field]: errorMsg }));
+//     return !errorMsg;
+//   };
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setTempUser({ ...tempUser, [name]: value });
+//   };
+
+//   const handleSave = (field) => {
+//     if (validateForm(field, tempUser[field])) {
+//       setUser(tempUser);
+//       setEditMode((prev) => ({ ...prev, [field]: false }));
+//     }
+//   };
+
+//   const handleCancel = (field) => {
+//     setTempUser(user);
+//     setEditMode((prev) => ({ ...prev, [field]: false }));
+//   };
+
+//   return (
+//     <div>
+//       <Nav />
+//       <div className="container w-50 mt-4">
+//         {/* My Account Section */}
+//         <div className="card p-4 shadow-sm mb-4 mx-auto"> 
+//           <h2 className="text-center fw-bold">User Details</h2>
+//           <div className="card-body">
+//             {["fullName","gender", "mobile", "email"].map((field) => (
+//               <div className="mb-3" key={field}>
+//                 <label className="form-label fw-bold">
+//                   {field.charAt(0).toUpperCase() + field.slice(1)}
+//                 </label>
+//                 <div className="d-flex">
+//                   <input
+//                     type="text"
+//                     className="form-control"
+//                     name={field}
+//                     value={tempUser[field]}
+//                     disabled={!editMode[field]}
+//                     onChange={handleChange}
+//                     style={{ width: "90%", height: "35px" }} 
+//                   />
+//                   {editMode[field] ? (
+//                     <>
+//                       <button className="btn btn-primary ms-2" onClick={() => handleSave(field)}>
+//                         <FaCheck />
+//                       </button>
+//                       <button className="btn btn-secondary ms-2" onClick={() => handleCancel(field)}>
+//                         <FaTimes />
+//                       </button>
+//                     </>
+//                   ) : (
+//                     <button className="btn btn-success ms-2" onClick={() => setEditMode({ ...editMode, [field]: true })}>
+//                       <FaEdit />
+//                     </button>
+//                   )}
+//                 </div>
+//                 {errors[field] && <small className="text-danger">{errors[field]}</small>}
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+  
+//         {/* Address Section */}
+//         {user.houseNumber || user.street || user.city || user.state || user.pincode ? (
+//           <div className="card p-4 shadow-sm mx-auto"> 
+//             <h2 className="text-center fw-bold">Address Details</h2>
+//             <div className="card-body">
+//               {["houseNumber", "street", "state","city", "pincode"].map((field) => (
+//                 <div className="mb-3" key={field}>
+//                   <label className="form-label fw-bold">
+//                     {field.charAt(0).toUpperCase() + field.slice(1)}
+//                   </label>
+//                   <div className="d-flex">
+//                     <input
+//                       type="text"
+//                       className="form-control"
+//                       name={field}
+//                       value={tempUser[field]}
+//                       disabled={!editMode.address}
+//                       onChange={handleChange}
+//                       style={{ width: "90%", height: "35px" }} 
+//                     />
+//                   </div>
+//                 </div>
+//               ))}
+//               {editMode.address ? (
+//                 <>
+//                   <button className="btn btn-primary ms-2" onClick={() => handleSave("address")}>
+//                     <FaCheck />
+//                   </button>
+//                   <button className="btn btn-secondary ms-2" onClick={() => handleCancel("address")}>
+//                     <FaTimes />
+//                   </button>
+//                 </>
+//               ) : (
+//                 <button className="btn btn-success ms-2" onClick={() => setEditMode({ ...editMode, address: true })}>
+//                   <FaEdit />
+//                 </button>
+//               )}
+//             </div>
+//           </div>
+//         ) : (
+//           <div className="p-1 text-center fw-bold mb-4 w-75 mx-auto" 
+//             style={{ backgroundColor: "#dc3545", color: "white", borderRadius: "5px" }}>
+//             No Address Found.
+//           </div>
+//         )}
+//       </div>
+//       <Footer />
+//     </div>
+//   ); 
+// };
+// export default MyAccount;
+
+
+
+
+
+// import React from "react";
+// import Nav from "../../nav/Nav";
+// import Footer from "../../nav/Footer";
+// import { Button, Card, CardContent, Typography, Grid } from "@mui/material";
+// import DownloadIcon from '@mui/icons-material/Download'; // Import the download icon
+// import axios from "axios"; // Import axios for making API requests
+
+// function MyPolicies() {
+//   // Static policy data
+//   const policies = [
+//     {
+//       policyId: 1,
+//       policyName: "Term Life Insurance",
+//       sumAssured: 1000000,
+//       premiumAmount: 25000,
+//       startDate: "2023-01-01",
+//       renewalDate: "2024-01-01",
+//       customerId: "CUST12345", // Added customerId
+//       policyHolder: "John Doe", // Added policyHolder
+//       insuranceType: "Health Insurance" // Added insuranceType
+//     },
+//   ];
+
+//   const handleDownloadInvoice = async (policyId) => {
+//     try {
+//       // Call the API to generate the invoice for the given policy ID
+//       const response = await axios.get(`http://localhost:9090/invoice/create/PAY${policyId}`);
+      
+//       // Log the response or handle the invoice download
+//       console.log("Invoice response:", response);
+
+//       // If the API response includes a file or URL, you can trigger the download:
+//       // For example:
+//       const invoiceUrl = response.data.invoiceUrl; // Assuming the response includes a URL to the invoice PDF
+//       if (invoiceUrl) {
+//         window.open(invoiceUrl, "_blank"); // Open the invoice PDF in a new tab
+//       }
+
+//       // You can also use `FileSaver` to trigger the download if needed
+//     } catch (error) {
+//       console.error("Error downloading invoice:", error);
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <Nav />
+//       <div className="container mt-4">
+//         <Typography
+//           variant="h4"
+//           className="mb-4"
+//           style={{ fontWeight: 'bold', textAlign: 'center' }}
+//         >
+//           RamanaSoft - Purchased Policy Overview
+//         </Typography>
+
+//         {policies.length === 0 ? (
+//           <Typography variant="h6" color="textSecondary">
+//             No policies found.
+//           </Typography>
+//         ) : (
+//           policies.map((policy, index) => (
+//             <Card key={index} className="mb-3" style={{ border: '2px solid black' }}>
+//               <CardContent>
+//                 <Grid container spacing={1}>
+//                   {/* First Grid item - Left-aligned heading and customer ID */}
+//                   <Grid item xs={12} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+//                     <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+//                       RamanaSecure Health Insurance
+//                     </Typography>
+//                     <div style={{ borderBottom: '1px solid lightgray', paddingBottom: '4px', marginBottom: '16px' }}>
+//                       <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+//                         CustomerID: {policy.customerId}
+//                       </Typography>
+//                     </div>
+//                   </Grid>
+
+//                   {/* Policy Holder, Sum Assured, Premium Amount (Left side) */}
+//                   <Grid item xs={6}>
+//                     <Typography variant="h6">Policy Holder: {policy.policyHolder}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Insurance Type: {policy.insuranceType}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Sum Assured: ₹{policy.sumAssured.toLocaleString()}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Premium Amount: ₹{policy.premiumAmount.toLocaleString()}</Typography>
+//                     <div className="field-spacing"></div>
+//                   </Grid>
+
+//                   {/* Number of Years, Start Date, and Renewal Date (Right side) */}
+//                   <Grid item xs={6}>
+//                     <Typography variant="h6">Number of Years: {new Date(policy.renewalDate).getFullYear() - new Date(policy.startDate).getFullYear()}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Start Date: {policy.startDate}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Renewal Date: {policy.renewalDate}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Button
+//                       variant="contained"
+//                       color="success"
+//                       onClick={() => handleDownloadInvoice(policy.policyId)}
+//                       startIcon={<DownloadIcon />}
+//                     >
+//                       Invoice {/* Text beside the icon */}
+//                     </Button>
+//                   </Grid>
+//                 </Grid>
+//               </CardContent>
+//             </Card>
+//           ))
+//         )}
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// }
+
+// export default MyPolicies;
+
+
+
+
+import React from "react";
+import Nav from "../../nav/Nav";
+import Footer from "../../nav/Footer";
+import { Button, Card, CardContent, Typography, Grid, TextField } from "@mui/material";
+import DownloadIcon from '@mui/icons-material/Download'; 
+
+function MyPolicies() {
+  // Static policy data
+  const policies = [
+    {
+      policyId: 1,
+      policyName: "Term Life Insurance",
+      sumAssured: 1000000,
+      premiumAmount: 25000,
+      startDate: "2023-01-01",
+      renewalDate: "2024-01-01",
+      customerId: "CUST12345", // Added customerId
+      policyHolder: "John Doe", // Added policyHolder
+    },
+  ];
+
+  
+
+  const handleDownloadInvoice = (policyId) => {
+    // Simulate the invoice download by logging to the console
+    console.log(`Download invoice for Policy ID: ${policyId}`);
+    // You can implement the actual invoice download functionality here
+  };
+
+  return (
+    <div>
+      <Nav />
+      <div className="container mt-4">
+        <Typography
+          variant="h4"
+          className="mb-4"
+          style={{ fontWeight: 'bold', textAlign: 'center' }}
+        >
+          RamanaSoft - Purchased Policy Overview
+        </Typography>
+
+        {policies.length === 0 ? (
+          <Typography variant="h6" color="textSecondary">
+            No policies found.
+          </Typography>
+        ) : (
+          policies.map((policy, index) => (
+            <Card key={index} className="mb-3">
+              <CardContent>
+                <Grid container spacing={1}>
+                  {/* First Grid item - Left-aligned heading and customer ID */}
+                  <Grid item xs={12} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+                      RamanaSecure Health Insurance
+                    </Typography>
+                    <div style={{ borderBottom: '1px solid lightgray', paddingBottom: '4px', marginBottom: '16px' }}>
+                      <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+                        CustomerID: {policy.customerId}
+                      </Typography>
+                    </div>
+                  </Grid>
+
+                  {/* Policy Holder, Sum Assured, Premium Amount (Left side) */}
+                  <Grid item xs={6}>
+                    <Typography variant="h6">Policy Holder: {policy.policyHolder}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Insurance Type: {policy.insuranceType}</Typography> {/* Added Insurance Type */}
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Sum Assured: ₹{policy.sumAssured.toLocaleString()}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Premium Amount: ₹{policy.premiumAmount.toLocaleString()}</Typography>
+                    <div className="field-spacing"></div>
+                  </Grid>
+
+                  {/* Number of Years, Start Date, and Renewal Date (Right side) */}
+                  <Grid item xs={6}>
+                    <Typography variant="h6">Number of Years: {new Date(policy.renewalDate).getFullYear() - new Date(policy.startDate).getFullYear()}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Start Date: {policy.startDate}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Renewal Date: {policy.renewalDate}</Typography>
+                    <div className="field-spacing"></div>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleDownloadInvoice(policy.policyId)}
+                      startIcon={<DownloadIcon />} // Add the download icon here
+                    >
+                      Invoice {/* Text beside the icon */}
+                    </Button>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+      <Footer />
+    </div>
+  );
+}
+export default MyPolicies;
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import Nav from "../../nav/Nav";
+// import Footer from "../../nav/Footer";
+// import axios from "axios";
+// import Cookies from "js-cookie";
+// import { FaEdit, FaCheck, FaTimes } from "react-icons/fa"; // Icons for buttons
+
+// const MyAccount = () => {
+//   const [editMode, setEditMode] = useState({});
+//   const [user, setUser] = useState({});
+//   const [tempUser, setTempUser] = useState({});
+//   const [errors, setErrors] = useState({});
+//   const mobileNumber = Cookies.get("MobileNumber");
+
+//   useEffect(() => {
+//     if (mobileNumber) {
+//       axios.get(`http://183.82.106.55:9100/register/fetch/${mobileNumber}`)
+//         .then((res) => {
+//           const userData = {
+//             fullName: res.data.fullName || "",
+//             mobile: res.data.mobile || mobileNumber,
+//             email: res.data.email || "",
+//             gender: res.data.gender || "",  // Add this line to set gender
+//             customerId: res.data.customerId || "",
+//           };
+//           setUser(userData);
+//           setTempUser(userData);
+//           return axios.get(`http://183.82.106.55:9100/policy/customerdetails/${res.data.customerId}`);
+//         })
+//         .then((res1) => {
+//           const addressData = {
+//             houseNumber: res1.data.houseNo || "",
+//             street: res1.data.street || "",
+//             city: res1.data.city || "",
+//             state: res1.data.state || "",
+//             pincode: res1.data.pincode || "",
+//           };
+//           setUser((prev) => ({ ...prev, ...addressData }));
+//           setTempUser((prev) => ({ ...prev, ...addressData }));
+//         })
+//         .catch((err) => console.error("Error fetching user details:", err));
+//     }
+//   }, [mobileNumber]);
+
+//   const validateForm = (field, value) => {
+//     let errorMsg = "";
+//     if (field === "fullName" && (!value.trim() || value.length < 3)) {
+//       errorMsg = "Full Name must be at least 3 characters.";
+//     }
+//     if (field === "mobile" && !/^\d{10}$/.test(value)) {
+//       errorMsg = "Mobile Number must be 10 digits.";
+//     }
+//     if (field === "email" && !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(value)) {
+//       errorMsg = "Enter a valid lowercase email.";
+//     }
+//     setErrors((prev) => ({ ...prev, [field]: errorMsg }));
+//     return !errorMsg;
+//   };
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setTempUser({ ...tempUser, [name]: value });
+//   };
+
+//   const handleSave = (field) => {
+//     if (validateForm(field, tempUser[field])) {
+//       setUser(tempUser);
+//       setEditMode((prev) => ({ ...prev, [field]: false }));
+//     }
+//   };
+
+//   const handleCancel = (field) => {
+//     setTempUser(user);
+//     setEditMode((prev) => ({ ...prev, [field]: false }));
+//   };
+
+//   return (
+//     <div>
+//       <Nav />
+//       <div className="container w-75 mt-4">
+//         {/* My Account Section */}
+//         <div className="card p-4 shadow-sm mb-4">
+//           <h2 className="text-center fw-bold">My Account</h2>
+//           <div className="card-body">
+//             <div className="row g-3">
+//               {['fullName', 'gender', 'mobile', 'email'].map((field) => (
+//                 <div className="col-md-6" key={field}>
+//                   <label className="form-label fw-bold">
+//                     {field.charAt(0).toUpperCase() + field.slice(1)}
+//                   </label>
+//                   <div className="d-flex">
+//                     <input
+//                       type="text"
+//                       className="form-control"
+//                       name={field}
+//                       value={tempUser[field]}
+//                       disabled={!editMode[field]}
+//                       onChange={handleChange}
+//                     />
+//                     {editMode[field] ? (
+//                       <>
+//                         <button className="btn btn-primary ms-2" onClick={() => handleSave(field)}>
+//                           Save Changes
+//                         </button>
+//                         <button className="btn btn-secondary ms-2" onClick={() => handleCancel(field)}>
+//                           Cancel
+//                         </button>
+//                       </>
+//                     ) : (
+//                       <button className="btn btn-success ms-2" onClick={() => setEditMode({ ...editMode, [field]: true })}>
+//                         <FaEdit />
+//                       </button>
+//                     )}
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+//           </div>
+//         </div>
+//         {/* Address Section */}
+//         {user.houseNumber || user.street || user.city || user.state || user.pincode ? (
+//           <div className="card p-4 shadow-sm">
+//             <h2 className="text-center fw-bold">Address Details</h2>
+//             <div className="card-body">
+//               <div className="row g-3">
+//                 {['houseNumber', 'street', 'city', 'state', 'pincode'].map((field) => (
+//                   <div className="col-md-6" key={field}>
+//                     <label className="form-label fw-bold">
+//                       {field.charAt(0).toUpperCase() + field.slice(1)}
+//                     </label>
+//                     <input
+//                       type="text"
+//                       className="form-control"
+//                       name={field}
+//                       value={tempUser[field]}
+//                       disabled={!editMode.address}
+//                       onChange={handleChange}
+//                     />
+//                   </div>
+//                 ))}
+//               </div>
+//               {editMode.address ? (
+//                 <>
+//                   <button className="btn btn-primary mt-3" onClick={() => handleSave('address')}>
+//                     Save Changes
+//                   </button>
+//                   <button className="btn btn-secondary mt-3 ms-2" onClick={() => handleCancel('address')}>
+//                     Cancel
+//                   </button>
+//                 </>
+//               ) : (
+//                 <button className="btn btn-success mt-3" onClick={() => setEditMode({ ...editMode, address: true })}>
+//                   <FaEdit />
+//                 </button>
+//               )}
+//             </div>
+//           </div>
+//         ) : (
+//           <div className="p-2 text-center fw-bold mb-4 w-75 mx-auto"
+//             style={{ backgroundColor: "#dc3545", color: "white", borderRadius: "5px" }}>
+//             No address found.
+//           </div>
+//         )}
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// };
+// export default MyAccount;
+
+
+
+
+
+
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import Nav from "../../nav/Nav";
+// import Footer from "../../nav/Footer";
+// import { Button, Card, CardContent, Typography, Grid, CircularProgress } from "@mui/material";
+// import DownloadIcon from '@mui/icons-material/Download';
+
+// function MyPolicies() {
+//   const [policies, setPolicies] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   const customerId = 2356; // Change this dynamically if needed
+
+//   useEffect(() => {
+//     const fetchPolicies = async () => {
+//       try {
+//         const response = await fetch(
+//           `http://183.82.106.55:9100/relation/customer-details?customerId=${customerId}`,
+//           {
+//             method: "GET",
+//             headers: {
+//               "Content-Type": "application/json",
+//               "Accept": "application/json",
+//             },
+//           }
+//         );
+  
+//         if (!response.ok) {
+//           throw new Error(`Error: ${response.status} - ${response.statusText}`);
+//         }
+  
+//         const data = await response.json();
+//         setPolicies(data);
+//       } catch (error) {
+//         console.error("Fetching policies failed:", error);
+//         setError(error.message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+  
+//     fetchPolicies();
+//   }, []);
+  
+
+//   const handleDownloadInvoice = (policyId) => {
+//     console.log(`Download invoice for Policy ID: ${policyId}`);
+//     // Implement actual invoice download logic here
+//   };
+
+//   return (
+//     <div>
+//       <Nav />
+//       <div className="container mt-4">
+//         <Typography
+//           variant="h4"
+//           className="mb-4"
+//           style={{ fontWeight: 'bold', textAlign: 'center' }}
+//         >
+//           RamanaSoft - Purchased Policy Overview
+//         </Typography>
+
+//         {loading ? (
+//           <CircularProgress style={{ display: "block", margin: "20px auto" }} />
+//         ) : error ? (
+//           <Typography variant="h6" color="error" style={{ textAlign: "center" }}>
+//             {error}
+//           </Typography>
+//         ) : policies.length === 0 ? (
+//           <Typography variant="h6" color="textSecondary" style={{ textAlign: "center" }}>
+//             No policies found.
+//           </Typography>
+//         ) : (
+//           policies.map((policy, index) => (
+//             <Card key={index} className="mb-3">
+//               <CardContent>
+//                 <Grid container spacing={1}>
+//                   <Grid item xs={12} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+//                     <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+//                       RamanaSecure Health Insurance
+//                     </Typography>
+//                     <div style={{ borderBottom: '1px solid lightgray', paddingBottom: '4px', marginBottom: '16px' }}>
+//                       <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+//                         CustomerID: {policy.customerId}
+//                       </Typography>
+//                     </div>
+//                   </Grid>
+
+//                   <Grid item xs={6}>
+//                     <Typography variant="h6">Policy Holder: {policy.policyHolder}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Insurance Type: {policy.insuranceType}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Sum Assured: ₹{policy.sumAssured.toLocaleString()}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Premium Amount: ₹{policy.premiumAmount.toLocaleString()}</Typography>
+//                   </Grid>
+
+//                   <Grid item xs={6}>
+//                     <Typography variant="h6">Number of Years: {new Date(policy.renewalDate).getFullYear() - new Date(policy.startDate).getFullYear()}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Start Date: {policy.startDate}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Renewal Date: {policy.renewalDate}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Button
+//                       variant="contained"
+//                       color="success"
+//                       onClick={() => handleDownloadInvoice(policy.policyId)}
+//                       startIcon={<DownloadIcon />}
+//                     >
+//                       Invoice
+//                     </Button>
+//                   </Grid>
+//                 </Grid>
+//               </CardContent>
+//             </Card>
+//           ))
+//         )}
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// }
+
+// export default MyPolicies;
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import Nav from "../../nav/Nav";
+// import Footer from "../../nav/Footer";
+// import { Button, Card, CardContent, Typography, Grid } from "@mui/material";
+// import DownloadIcon from '@mui/icons-material/Download'; 
+
+// function MyPolicies() {
+//   const [policies, setPolicies] = useState([]); // Store API policies
+//   const [user, setUser] = useState({});
+//   const [tempUser, setTempUser] = useState({});
+//   const [mobileNumber, setMobileNumber] = useState("9876543210"); // Example mobileNumber, replace it with actual state
+
+//   useEffect(() => {
+//     if (mobileNumber) {
+//       axios.get(`http://183.82.106.55:9100/register/fetch/${mobileNumber}`)
+//         .then((res) => {
+//           const userData = {
+//             fullName: res.data.fullName || "",
+//             mobile: res.data.mobile || mobileNumber,
+//             email: res.data.email || "",
+//             gender: res.data.gender || "",
+//             customerId: res.data.customerId || "",
+//           };
+//           setUser(userData);
+//           setTempUser(userData);
+
+//           if (!res.data.customerId) {
+//             throw new Error("Customer ID not found");
+//           }
+
+//           // Fetch customer details using customerId
+//           return axios.get(`http://183.82.106.55:9100/relation/customer-details?customerId=${res.data.customerId}`);
+//         })
+//         .then((res1) => {
+//           const addressData = {
+//             houseNumber: res1.data.houseNo || "",
+//             street: res1.data.street || "",
+//             city: res1.data.city || "",
+//             state: res1.data.state || "",
+//             pincode: res1.data.pincode || "",
+//           };
+//           setUser((prev) => ({ ...prev, ...addressData }));
+//           setTempUser((prev) => ({ ...prev, ...addressData }));
+
+//           // Fetch policies for the customer
+//           return axios.get(`http://183.82.106.55:9100/policy/customerdetails/${user.customerId}`);
+//         })
+//         .then((policyRes) => {
+//           setPolicies(policyRes.data); // Update policies with API response
+//         })
+//         .catch((err) => console.error("Error fetching data:", err));
+//     }
+//   }, [mobileNumber]);
+
+//   const handleDownloadInvoice = (policyId) => {
+//     console.log(`Download invoice for Policy ID: ${policyId}`);
+//     // Add actual invoice download functionality here
+//   };
+
+//   return (
+//     <div>
+//       <Nav />
+//       <div className="container mt-4">
+//         <Typography
+//           variant="h4"
+//           className="mb-4"
+//           style={{ fontWeight: 'bold', textAlign: 'center' }}
+//         >
+//           RamanaSoft - Purchased Policy Overview
+//         </Typography>
+
+//         {policies.length === 0 ? (
+//           <Typography variant="h6" color="textSecondary">
+//             No policies found.
+//           </Typography>
+//         ) : (
+//           policies.map((policy, index) => (
+//             <Card key={index} className="mb-3">
+//               <CardContent>
+//                 <Grid container spacing={2}>
+//                   <Grid item xs={12} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+//                     <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+//                       RamanaSecure Health Insurance
+//                     </Typography>
+//                     <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+//                       CustomerID: {policy.customerId}
+//                     </Typography>
+//                   </Grid>
+
+//                   <Grid item xs={6}>
+//                     <Typography variant="h6">Policy Holder: {policy.policyHolder}</Typography>
+//                     <Typography variant="h6">Insurance Type: {policy.insuranceType || "N/A"}</Typography>
+//                     <Typography variant="h6">Sum Assured: ₹{policy.sumAssured.toLocaleString()}</Typography>
+//                     <Typography variant="h6">Premium Amount: ₹{policy.premiumAmount.toLocaleString()}</Typography>
+//                   </Grid>
+
+//                   <Grid item xs={6}>
+//                     <Typography variant="h6">Number of Years: {new Date(policy.renewalDate).getFullYear() - new Date(policy.startDate).getFullYear()}</Typography>
+//                     <Typography variant="h6">Start Date: {policy.startDate}</Typography>
+//                     <Typography variant="h6">Renewal Date: {policy.renewalDate}</Typography>
+//                     <Button
+//                       variant="contained"
+//                       color="success"
+//                       onClick={() => handleDownloadInvoice(policy.policyId)}
+//                       startIcon={<DownloadIcon />}
+//                     >
+//                       Invoice
+//                     </Button>
+//                   </Grid>
+//                 </Grid>
+//               </CardContent>
+//             </Card>
+//           ))
+//         )}
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// }
+
+// export default MyPolicies;
+
+
+
+
+http://183.82.106.55:9100/register/update/mobile/${customerId}?mobile=${encodeURIComponent(mobileNo)}
+
+
+
+
+
+
+
+
+import React, { useEffect, useState } from "react";
+import Nav from "../../nav/Nav";
+import Footer from "../../nav/Footer";
+import { Button, Card, CardContent, Typography, Grid } from "@mui/material";
+import DownloadIcon from "@mui/icons-material/Download"; // Import the download icon
+import axios from "axios";
+import Cookies from "js-cookie";
+
+function MyPolicies() {
+  const [policies, setPolicies] = useState([]);
+  const [user, setUser] = useState(null);
+  const mobileNumber = Cookies.get("MobileNumber"); // Fetch the mobile number from cookies
+  const [customerId, setCustomerId] = useState(null); // Store customerId
+  const [loading, setLoading] = useState(false); // Track loading state
+
+  useEffect(() => {
+    if (mobileNumber) {
+      setLoading(true);
+      // Fetch user details by mobile number
+      axios
+        .get(`http://183.82.106.55:9100/register/fetch/${mobileNumber}`)
+        .then((res) => {
+          const userDataCustomerId = res.data.customerId; // Extract user data from response
+          setCustomerId(userDataCustomerId);
+          console.log("User data fetched:", userDataCustomerId);
+
+          // Fetch relations with matching paymentId for customerId
+          axios
+            .get(`http://183.82.106.55:9100/relation/customer-details?customerId=${userDataCustomerId}`)
+            .then((relationsRes) => {
+              console.log("Relations fetched:", relationsRes.data);
+
+              // Now fetch the payment details
+              axios
+                .get(`http://183.82.106.55:9100/payment/customerid?customerId=${userDataCustomerId}`)
+                .then((paymentRes) => {
+                  console.log("Payment details fetched:", paymentRes.data);
+
+                  // Map relations to policies where paymentId matches
+                  const relatedPolicies = relationsRes.data.filter((relation) =>
+                    paymentRes.data.some((payment) => payment.paymentId === relation.paymentId)
+                  );
+
+                  setPolicies(relatedPolicies); // Set policies to display
+                  setLoading(false);
+                })
+                .catch((paymentError) => {
+                  console.error("Error fetching payment details:", paymentError);
+                  setLoading(false);
+                });
+            })
+            .catch((relationsError) => {
+              console.error("Error fetching relations:", relationsError);
+              setLoading(false);
+            });
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setLoading(false);
+        });
+    }
+  }, [mobileNumber]);
+
+  const handleDownloadInvoice = (policyId) => {
+    // Simulate the invoice download by logging to the console
+    console.log(`Download invoice for Policy ID: ${policyId}`);
+    // You can implement the actual invoice download functionality here
+  };
+
+  return (
+    <div>
+      <Nav />
+      <div className="container mt-4">
+        <Typography
+          variant="h4"
+          className="mb-4"
+          style={{ fontWeight: "bold", textAlign: "center" }}
+        >
+          RamanaSoft - Purchased Policy Overview
+        </Typography>
+
+        {loading ? (
+          <Typography variant="h6" color="textSecondary">
+            Loading policies...
+          </Typography>
+        ) : policies.length === 0 ? (
+          <Typography variant="h6" color="textSecondary">
+            No policies found.
+          </Typography>
+        ) : (
+          policies.map((policy, index) => (
+            <Card key={index} className="mb-3">
+              <CardContent>
+                <Grid container spacing={1}>
+                  {/* First Grid item - Left-aligned heading and customer ID */}
+                  <Grid
+                    item
+                    xs={12}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <Typography variant="h6" style={{ fontWeight: "bold" }}>
+                      {policy.policyName}
+                    </Typography>
+                    <div
+                      style={{
+                        borderBottom: "1px solid lightgray",
+                        paddingBottom: "4px",
+                        marginBottom: "16px",
+                      }}
+                    >
+                      <Typography variant="h6" style={{ fontWeight: "bold" }}>
+                        CustomerID: {policy.customerId}
+                      </Typography>
+                    </div>
+                  </Grid>
+
+                  {/* Policy Holder, Sum Assured, Premium Amount (Left side) */}
+                  <Grid item xs={6}>
+                    <Typography variant="h6">Policy Holder: {policy.policyHolder}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Insurance Type: {policy.insuranceType}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">
+                      Sum Assured: ₹{policy.sumAssured.toLocaleString()}
+                    </Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">
+                      Premium Amount: ₹{policy.premiumAmount.toLocaleString()}
+                    </Typography>
+                    <div className="field-spacing"></div>
+                  </Grid>
+
+                  {/* Number of Years, Start Date, and Renewal Date (Right side) */}
+                  <Grid item xs={6}>
+                    <Typography variant="h6">
+                      Number of Years: {new Date(policy.renewalDate).getFullYear() - new Date(policy.startDate).getFullYear()}
+                    </Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Start Date: {policy.startDate}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Renewal Date: {policy.renewalDate}</Typography>
+                    <div className="field-spacing"></div>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleDownloadInvoice(policy.policyId)}
+                      startIcon={<DownloadIcon />} // Add the download icon here
+                    >
+                      Invoice {/* Text beside the icon */}
+                    </Button>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
+export default MyPolicies;
+
+
+
+
+
+import React, { useEffect, useState } from "react";
+import Nav from "../../nav/Nav";
+import Footer from "../../nav/Footer";
+import { Button, Card, CardContent, Typography, Grid, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import DownloadIcon from "@mui/icons-material/Download";
+import axios from "axios";
+import Cookies from "js-cookie";
+
+function MyPolicies() {
+  const [policies, setPolicies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [selectedInsuredMembers, setSelectedInsuredMembers] = useState([]);
+  const mobileNumber = Cookies.get("MobileNumber");
+
+  useEffect(() => {
+    if (mobileNumber) {
+      setLoading(true);
+      setError(null);
+
+      axios
+        .get(`http://183.82.106.55:9100/register/fetch/${mobileNumber}`)
+        .then((res) => {
+          const userDataCustomerId = res.data.customerId;
+          console.log("User data fetched:", userDataCustomerId);
+
+          axios
+            .get(`http://183.82.106.55:9100/relation/customer-details?customerId=${userDataCustomerId}`)
+            .then((relationsRes) => {
+              console.log("Relations fetched:", relationsRes.data);
+
+              axios
+                .get(`http://183.82.106.55:9100/payment/customerid?customerId=${userDataCustomerId}`)
+                .then((paymentRes) => {
+                  console.log("Payment details fetched:", paymentRes.data);
+
+                  const relatedPolicies = relationsRes.data.filter((relation) =>
+                    paymentRes.data.some((payment) => payment.paymentId === relation.paymentId)
+                  );
+
+                  if (relatedPolicies.length === 0) {
+                    setError("No related policies found for this customer.");
+                  } else {
+                    setPolicies(relatedPolicies);
+                  }
+                  setLoading(false);
+                })
+                .catch((paymentError) => {
+                  console.error("Error fetching payment details:", paymentError);
+                  setError("Error fetching payment details.");
+                  setLoading(false);
+                });
+            })
+            .catch((relationsError) => {
+              console.error("Error fetching relations:", relationsError);
+              setError("Error fetching relations.");
+              setLoading(false);
+            });
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setError("Error fetching user data.");
+          setLoading(false);
+        });
+    }
+  }, [mobileNumber]);
+
+  const handleDownloadInvoice = (policyId) => {
+    console.log(`Download invoice for Policy ID: ${policyId}`);
+  };
+
+  const handleOpenPopup = (insuredMembers) => {
+    setSelectedInsuredMembers(insuredMembers);
+    setOpenPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setOpenPopup(false);
+  };
+
+  return (
+    <div>
+      <Nav />
+      <div className="container mt-4">
+        <Typography variant="h4" className="mb-4" style={{ fontWeight: "bold", textAlign: "center" }}>
+          RamanaSoft - Purchased Policy Overview
+        </Typography>
+
+        {loading ? (
+          <Typography variant="h6" color="textSecondary">
+            Loading policies...
+          </Typography>
+        ) : error ? (
+          <Typography variant="h6" color="error">
+            {error}
+          </Typography>
+        ) : policies.length === 0 ? (
+          <Typography variant="h6" color="textSecondary">
+            No policies found.
+          </Typography>
+        ) : (
+          policies.map((policy, index) => (
+            <Card key={index} className="mb-3">
+              <CardContent>
+                <Grid container spacing={1}>
+                  <Grid item xs={12} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                    <Typography variant="h6" style={{ fontWeight: "bold" }}>
+                      RamanaSecure Health Insurance
+                    </Typography>
+                    <div style={{ borderBottom: "1px solid lightgray", paddingBottom: "4px", marginBottom: "16px" }}>
+                      <Typography variant="h6" style={{ fontWeight: "bold" }}>
+                        CustomerID: {policy.customerId}
+                      </Typography>
+                    </div>
+                  </Grid>
+
+                  {/* Policy Holder, Sum Assured, Premium Amount */}
+                  <Grid item xs={6}>
+                    <Typography variant="h6">Policy Holder: {policy.policyHolder}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Insurance Type: {policy.insuranceType}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Sum Assured: {policy.sumAssured}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Premium Amount: {policy.premiumAmount}</Typography>
+                    <div className="field-spacing"></div>
+                  </Grid>
+
+                  {/* Number of Years, Start Date, and Renewal Date */}
+                  <Grid item xs={6}>
+                    <Typography variant="h6">Number of Years: {policy.numberOfYears}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Start Date: {policy.startDate}</Typography>
+                    <div className="field-spacing"></div>
+                    <Typography variant="h6">Renewal Date: {policy.renewalDate}</Typography>
+                    <div className="field-spacing"></div>
+                    <Button variant="contained" color="success" onClick={() => handleDownloadInvoice(policy.policyId)} startIcon={<DownloadIcon />}>
+                      Invoice
+                    </Button>
+                  </Grid>
+
+                  {/* Hyperlink to Open Insured Members Popup */}
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h6"
+                      style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }}
+                      onClick={() => handleOpenPopup(policy.insuredMembers)}
+                    >
+                      Insured Members
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+      <Footer />
+
+      {/* Popup Dialog for Insured Members */}
+      <Dialog open={openPopup} onClose={handleClosePopup}>
+        <DialogTitle>Insured Members</DialogTitle>
+        <DialogContent>
+          {selectedInsuredMembers.length > 0 ? (
+            selectedInsuredMembers.map((member, i) => (
+              <Typography key={i} variant="h6" style={{ marginBottom: "8px" }}>
+                {i + 1}. {member.name} - {member.age} years
+              </Typography>
+            ))
+          ) : (
+            <Typography variant="h6" color="textSecondary">
+              No insured members found.
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClosePopup} color="primary" variant="contained">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
+export default MyPolicies;
+
+
+
+
+
+
+// import React from "react";
+// import Nav from "../../nav/Nav";
+// import Footer from "../../nav/Footer";
+// import { Button, Card, CardContent, Typography, Grid, TextField } from "@mui/material";
+// import DownloadIcon from '@mui/icons-material/Download'; // Import the download icon
+// import axios from "axios";
+// import { useEffect } from "react";
+// import { useState } from "react";
+// import Cookies from 'js-cookie';
+
+// function MyPolicies() {
+//   // Static policy data
+//   const policies = [
+//     {
+//       policyId: 1,
+//       policyName: "Term Life Insurance",
+//       sumAssured: 1000000,
+//       premiumAmount: 25000,
+//       startDate: "2023-01-01",
+//       renewalDate: "2024-01-01",
+//       customerId: "CUST12345", // Added customerId
+//       policyHolder: "John Doe", // Added policyHolder
+//     },
+//   ];
+//   const [user, setUser] = useState(null);
+//   const [tempUser, setTempUser] = useState(null);
+
+
+//   const mobileNumber = Cookies.get("MobileNumber"); // Fetch the mobile number from cookies
+//   const customerId = policies[0]?.customerId; // Assuming a single policy for simplicity
+
+// useEffect(() => {
+//   if (mobileNumber) {
+//     // Fetch user details by mobile number
+//     axios
+//       .get(`http://183.82.106.55:9100/register/fetch/${mobileNumber}`)
+//       .then((res) => {
+//         const userDataCustormerId = res.data.customerId; // Extract user data from response
+//         console.log("User data fetched:", userDataCustormerId);
+
+//         // Fetch customer details using the customerId
+//         if (userDataCustormerId) {
+//           axios
+//             .get(`http://183.82.106.55:9100/relation/customer-details?customerId=${userDataCustormerId}`)
+//             .then((res) => {
+//               console.log("Customer details fetched:", res.data);
+
+//               // Now fetch the payment details using the customerId
+//               axios
+//                 .get(`http://183.82.106.55:9100/payment/customerid?customerId=${userDataCustormerId}`)
+//                 .then((paymentRes) => {
+//                   console.log("Payment details fetched:", paymentRes.data);
+//                   // You can process the payment details here
+//                   // Example: If you need to match payment details, do it here
+//                 })
+//                 .catch((paymentError) => {
+//                   console.error("Error fetching payment details:", paymentError);
+//                 });
+//             })
+//             .catch((error) => {
+//               console.error("Error fetching customer details:", error);
+//             });
+//         }
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching user data:", error);
+//       });
+//   }
+// }, [mobileNumber, customerId]);
+
+
+//   const handleDownloadInvoice = (policyId) => {
+//     // Simulate the invoice download by logging to the console
+//     console.log(`Download invoice for Policy ID: ${policyId}`);
+//     // You can implement the actual invoice download functionality here
+//   };
+
+//   return (
+//     <div>
+//       <Nav />
+//       <div className="container mt-4">
+//         <Typography
+//           variant="h4"
+//           className="mb-4"
+//           style={{ fontWeight: 'bold', textAlign: 'center' }}
+//         >
+//           RamanaSoft - Purchased Policy Overview
+//         </Typography>
+
+//         {policies.length === 0 ? (
+//           <Typography variant="h6" color="textSecondary">
+//             No policies found.
+//           </Typography>
+//         ) : (
+//           policies.map((policy, index) => (
+//             <Card key={index} className="mb-3">
+//               <CardContent>
+//                 <Grid container spacing={1}>
+//                   {/* First Grid item - Left-aligned heading and customer ID */}
+//                   <Grid item xs={12} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+//                     <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+//                       RamanaSecure Health Insurance
+//                     </Typography>
+//                     <div style={{ borderBottom: '1px solid lightgray', paddingBottom: '4px', marginBottom: '16px' }}>
+//                       <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+//                         CustomerID: {policy.customerId}
+//                       </Typography>
+//                     </div>
+//                   </Grid>
+
+//                   {/* Policy Holder, Sum Assured, Premium Amount (Left side) */}
+//                   <Grid item xs={6}>
+//                     <Typography variant="h6">Policy Holder: {policy.policyHolder}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Insurance Type: {policy.insuranceType}</Typography> {/* Added Insurance Type */}
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Sum Assured: ₹{policy.sumAssured.toLocaleString()}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Premium Amount: ₹{policy.premiumAmount.toLocaleString()}</Typography>
+//                     <div className="field-spacing"></div>
+//                   </Grid>
+
+//                   {/* Number of Years, Start Date, and Renewal Date (Right side) */}
+//                   <Grid item xs={6}>
+//                     <Typography variant="h6">Number of Years: {new Date(policy.renewalDate).getFullYear() - new Date(policy.startDate).getFullYear()}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Start Date: {policy.startDate}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Typography variant="h6">Renewal Date: {policy.renewalDate}</Typography>
+//                     <div className="field-spacing"></div>
+//                     <Button
+//                       variant="contained"
+//                       color="success"
+//                       onClick={() => handleDownloadInvoice(policy.policyId)}
+//                       startIcon={<DownloadIcon />} // Add the download icon here
+//                     >
+//                       Invoice {/* Text beside the icon */}
+//                     </Button>
+//                   </Grid>
+
+//                 </Grid>
+//               </CardContent>
+//             </Card>
+//           ))
+//         )}
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// }
+// export default MyPolicies;

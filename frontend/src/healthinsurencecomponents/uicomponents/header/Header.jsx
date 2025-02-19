@@ -1,3 +1,4 @@
+
 import { Modal, Toast } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -61,6 +62,11 @@ function Header() {
     // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
 
+    useEffect(()=>{
+    sessionStorage.clear();
+    Cookies.remove();
+      },[])
+
     const openModal = () => setShowModal(true);
     const closeModal = () => {
         setShowModal(false);
@@ -114,20 +120,7 @@ function Header() {
 
     const [verifiedLoginMobileNumber, setverifiedLoginMobileNumber] = useState(true)
 
-    // const handleInputChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setValues1({ ...values1, [name]: value })
-
-    //     if (name === "phoneNumber") {
-    //         setErrors1({
-    //             ...errors1,
-    //             phoneNumber: phonePattern.test(value)
-    //                 ? ""
-    //                 : "Phone number must start with 6-9 and be 10 digits long",
-    //         });
-    //     }
-    //     if (errors1.phoneNumber == '') { setIsMObileNumberVerified(false) }
-    // }
+  
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -398,6 +391,13 @@ function Header() {
                 closeModal(); // Close the modal
                 setValues1("");
                 Cookies.set("MobileNumber", values1.phoneNumber)
+                sessionStorage.setItem('MobileNo',values1.phoneNumber);
+                 //section storage
+
+                 
+                 
+                 
+                 
                 navigate('/nav')
                 toast.success("Login successful!");
 
@@ -554,6 +554,8 @@ function Header() {
         }
     };
 
+
+
     return (
         <div>
             <nav className="navbar navbar-light bg-light">
@@ -593,7 +595,7 @@ function Header() {
                                         maxLength="10"
                                         className={`form-control ${errors1.phoneNumber
                                             ? "is-invalid" : ""}`}
-                                        placeholder="ex:8074266336"
+                                        placeholder="ex:88888888888"
                                         value={values1.phoneNumber}
                                         onChange={handleInputChange}
                                     />
@@ -766,7 +768,7 @@ function Header() {
                                             name="phoneNumber1"
                                             maxLength="10"
                                             className={`form-control ${errors.phoneNumber1 ? "is-invalid" : ""}`}
-                                            placeholder="ex:8074266336"
+                                            placeholder="ex:8888888888"
                                             value={values.phoneNumber1}
                                             onChange={handleInputChangePhoneNumber}
                                             required
@@ -856,10 +858,6 @@ function Header() {
     );
 }
 export default Header;
-
-
-
-
 
 
 

@@ -6,8 +6,9 @@ import Family from "../uicomponents/content/nextpage/Family";
 import Relation from "../uicomponents/content/age/Relation";
 // import Quotation from "../uicomponents/content/qotation/Quotation"
 import Quotationinfo from "../uicomponents/content/qotation/Quotationinfo";
-// import Review from "../uicomponents/content/policyreview/Review";
-
+import Review from "../uicomponents/content/policyreview/Review";
+import MyAccount from "../uicomponents/content/myprofile/MyAccount";
+import MyPolicies from "../uicomponents/content/myprofile/MyPolicies";
 
 function Routing(){
   return(
@@ -21,10 +22,10 @@ function Routing(){
     <Route path="/page" element={<Relation/>} />
     {/* <Route path="/you" element={<Quotation/>} /> */}
     <Route path="/you" element={<Quotationinfo />} />
-    {/* <Route path="/review" element={<Review />} /> */}
-
-
-
+    <Route path="/review" element={<Review />} />
+    <Route path="/my-account" element={<MyAccount />} />
+    <Route path="/my-policies" element={<MyPolicies />} />
+    
     </Routes>
   </div>
   )

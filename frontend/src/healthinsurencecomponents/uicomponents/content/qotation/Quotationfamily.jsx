@@ -1,226 +1,262 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux"; // ✅ Import useDispatch
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
 import Nav from "../../nav/Nav";
 import Footer from "../../nav/Footer";
-import { useSelector } from "react-redux";
-//  import "./Quotationfamily.css";
-import axios from 'axios';
-import Cookies from 'js-cookie';
+
+import {
+  setSumAssured1,
+  setPreExisting1,
+  setPreExistingAmount1,
+  setFinalPremium1,
+  setInitialPremium1,
+  setSelectedDuration1
+} from "../../../../storage/relationsSlice";
 
 const Quotationfamily = () => {
-  const [sumAssured, setSumAssured] = useState(500000);
-  const [familySize, setFamilySize] = useState(0); // Default to 2 members
-  const [preExisting, setPreExisting] = useState(0); // User-provided pre-existing condition length (in years), allows 0
-  const [selectedDuration, setSelectedDuration] = useState("1 Year"); // Default selected duration
-  const [initialPremium, setInitialPremium] = useState(0); // To store the initial premium amount
-  const [finalPremium, setFinalPremium] = useState(0); // To store the final premium amount after considering pre-existing conditions
-  const [preExistingAmount, setPreExistingAmount] = useState(0); // To store the premium amount due to pre-existing diseases
+  const dispatch = useDispatch(); // ✅ Initialize useDispatch
+  const navigate = useNavigate();
 
-  // Function to calculate the base rate
-  const calculateBaseRate = () => {
-    return 2; // Flat rate for the family size (2% of sum assured per member)
-  };
+  const [sumAssured, setSumAssured] = useState(500000);
+  const [familySize, setFamilySize] = useState(2);
+  const [preExisting, setPreExisting] = useState(0);
+  const [selectedDuration, setSelectedDuration] = useState("1 Year");
+  const [initialPremium, setInitialPremium] = useState(0);
+  const [finalPremium, setFinalPremium] = useState(0);
+  const [preExistingAmount, setPreExistingAmount] = useState(0);
+  const [sumAssuredData, setSumAssuredData] = useState([]);
+
+  const relationData = useSelector(state => state.relations.selectedRelations);
+  const diseaseData = useSelector(state => state.relations.disease);
+
+  const allRelations = [...relationData].filter(relation => relation);
+
+  const [customerDetails, setCustomerDetails] = useState({});
+  const customerId = customerDetails.customerId || "Not Available";
+  const username = customerDetails.fullName
+    ? customerDetails.fullName.charAt(0).toUpperCase() + customerDetails.fullName.slice(1)
+    : "";
+
+  const mobileNumber = Cookies.get("MobileNumber");
+
+  useEffect(() => {
+    axios.get(`http://183.82.106.55:9100/register/fetch/${mobileNumber}`)
+      .then(res => {
+        setCustomerDetails(res.data);
+      })
+      .catch(err => console.error("Error fetching customer details:", err));
+  }, [mobileNumber]);
 
   // Function to calculate initial premium
   const calculateInitialPremium = () => {
     return (sumAssured * familySize) / 100;
   };
 
- 
-  // Function to get the premium based on selected duration
+  // Update Premium Values
+  useEffect(() => {
+    const initial = calculateInitialPremium();
+    setInitialPremium(initial);
+
+    const preExistingCost = preExisting ? (sumAssured * 1) / 100 : 0;
+    setPreExistingAmount(preExistingCost);
+
+    setFinalPremium(initial + preExistingCost);
+  }, [sumAssured, familySize, preExisting]);
+
+  // Function to get premium based on selected duration
   const getPremiumForDuration = (years) => {
     let premium = initialPremium;
-
-    // Adjust premium based on selected duration
     if (years === 1) {
-      return premium + preExistingAmount; // Base amount for 1 year
+      return premium + preExistingAmount;
     } else if (years === 2) {
-      const discount = premium * (5 / 100);
-      const discountedPremium = premium - discount; // Apply 5% discount to the initial premium
-      return discountedPremium * 2 + preExistingAmount; // Double the discounted premium for 2 years
+      const discount = premium * 0.05;
+      return (premium - discount) * 2 + preExistingAmount;
     } else if (years === 3) {
-      const discount = premium * (10 / 100);
-      const discountedPremium = premium - discount; // Apply 10% discount to the initial premium
-      return discountedPremium * 3 + preExistingAmount; // Triple the discounted premium for 3 years
+      const discount = premium * 0.1;
+      return (premium - discount) * 3 + preExistingAmount;
     }
+
+    // Dispatch updated values to Redux store
+    dispatch(setSumAssured1(sumAssured));
+    dispatch(setPreExisting1(preExisting));
+    dispatch(setPreExistingAmount1(preExistingAmount));
+    dispatch(setInitialPremium1(initialPremium));
+    dispatch(setFinalPremium1(selectedDuration));
+    dispatch(setSelectedDuration1(selectedDuration));
+
   };
 
-  // Effect to update the final premium when selectedDuration changes
+  // Update Redux Store when premium values change
+  useEffect(() => {
+
+    dispatch(setSumAssured1(sumAssured));
+    dispatch(setPreExisting1(preExisting));
+    dispatch(setPreExistingAmount1(preExistingAmount));
+    dispatch(setInitialPremium1(initialPremium));
+    dispatch(setFinalPremium1(finalPremium));
+    dispatch(setSelectedDuration1(selectedDuration));
+
+    // console.log("Redux Store Updated:", {
+    //   sumAssured,
+    //   preExisting,
+    //   preExistingAmount,
+    //   initialPremium,
+    //   finalPremium,
+    //   selectedDuration
+    // });
+  }, [sumAssured, preExisting, preExistingAmount, initialPremium, finalPremium, selectedDuration, dispatch]);
+
+  const handleProceedClick = () => {
+    // alert(
+    //   `Proceeding with ${selectedDuration} premium: ₹${getPremiumForDuration(
+    //     selectedDuration === "1 Year" ? 1 : selectedDuration === "2 Years" ? 2 : 3
+    //   ).toLocaleString()}`
+    // );
+
+    // alert(`Proceeding with ${selectedDuration} premium: ₹${finalPremium.toLocaleString()}`);
+
+    // Dispatch updated values to Redux
+    dispatch(setSumAssured1(sumAssured));
+    dispatch(setPreExisting1(preExisting));
+    dispatch(setPreExistingAmount1(preExistingAmount));
+    dispatch(setInitialPremium1(initialPremium));
+    dispatch(setFinalPremium1(finalPremium)); // Use the latest finalPremium value
+    dispatch(setSelectedDuration1(selectedDuration));
+
+    // console.log("Redux Store Updated:", {
+    //   sumAssured,
+    //   preExisting,
+    //   preExistingAmount: preExistingAmount,
+    //   initialPremium: initialPremium,
+    //   finalPremium: finalPremium,
+    //   selectedDuration
+    // });
+    sessionStorage.setItem("sumAssuredAmount", JSON.stringify(sumAssured));
+    sessionStorage.setItem("YearOption", JSON.stringify(selectedDuration));
+    sessionStorage.setItem("initialPremiumAMountOption", JSON.stringify(initialPremium));
+    sessionStorage.setItem("FinalPremiumAmountOption", JSON.stringify(finalPremium));
+    navigate("/review");
+  };
+
+
+
+
+  useEffect(() => {
+    const data = sessionStorage.getItem("sumAssuredAmount");
+    const dataOfYearOption = sessionStorage.getItem("YearOption");
+    const datainitialPremium = sessionStorage.getItem("initialPremiumAMountOption");
+    const datafinalPremium = sessionStorage.getItem("FinalPremiumAmountOption");
+
+    const ipdata = data ? JSON.parse(data) : [];
+    const ipdataselectedDuration = dataOfYearOption ? JSON.parse(dataOfYearOption) : [];
+    const ipdatainitialPremium = datainitialPremium ? JSON.parse(datainitialPremium) : [];
+    const ipdatafinalPremium = datafinalPremium ? JSON.parse(datafinalPremium) : [];
+
+    console.log(ipdata, ipdatafinalPremium, ipdatainitialPremium, ipdataselectedDuration);
+
+    if (ipdata.length === 0) {
+      console.log("No data found for sumAssuredAmount");
+    } else {
+      setSumAssured(ipdata);
+    }
+
+    if (ipdataselectedDuration.length > 0) {
+      setSelectedDuration(ipdataselectedDuration);
+    }
+
+    if (ipdatainitialPremium.length > 0) {
+      setInitialPremium(ipdatainitialPremium);
+    }
+
+    if (ipdatafinalPremium.length > 0) {
+      setFinalPremium(ipdatafinalPremium);
+    }
+  }, []);
+
+
+
+
+
   useEffect(() => {
     const premiumForSelectedDuration = getPremiumForDuration(
       selectedDuration === "1 Year"
         ? 1
         : selectedDuration === "2 Years"
-        ? 2
-        : 3
+          ? 2
+          : 3
     );
     setFinalPremium(premiumForSelectedDuration);
   }, [selectedDuration, initialPremium, preExistingAmount]);
 
-  // Function to handle changes in family size and pre-existing disease input
-  const handleInputChange = (e) => {
-    // const value = parseInt(e.target.value, 10) || 0; // Parse the input to an integer or default to 0
-    // if (value >= 0 && value <= maxLimit) {
-    //   setter(value); // Update the state if the value is within the allowed range
-    // }
-    setPreExisting(e.target.value);
-  };
-
-  const relationData = useSelector(
-    (state) => state.relations.selectedRelations
-  );
-  const diseaseData = useSelector(
-    (state) => state.relations.disease
-  );
-  
-
-  const allRelations = [...relationData].filter(
-    (relation) => relation
-  );
-  // allRelations.map((data)=>{console.log(data)})
-  // console.log("Hi",relationData,diseaseData)
-
-  const [costumerdetails,setcustomerdetails]=useState([]);
-
-  const customerId = costumerdetails.customerId || 'Not Available';
-
-  const value = Cookies.get("MobileNumber");
-  useEffect(()=>{
-    axios.get('http://183.82.106.55:9100/register/fetch/'+value).then((res)=>{
-      // console.log(res.data);
-      setcustomerdetails(res.data);
-    },[value])
-  });
-  
-  const username = costumerdetails.fullName
-  ? costumerdetails.fullName.charAt(0).toUpperCase() + costumerdetails.fullName.slice(1)
-  : '';
-
-   useEffect(() => {
-    const value=allRelations.length;
-    setFamilySize(value);
-      const initial = calculateInitialPremium();
-      setInitialPremium(initial);
-  
-       diseaseData=="Yes" ? setPreExisting(true):setPreExisting(false)
-
-    // Calculate the amount due to pre-existing diseases
-    const preExistingCost = preExisting ?((sumAssured)*( 1/ 100)): 0;
-    setPreExistingAmount(preExistingCost);
-
-    // Set the final premium, including pre-existing disease adjustment
-    setFinalPremium(initial + preExistingCost);
-  }, [sumAssured, familySize, preExisting]);
-
-
   return (
     <div>
-      <Nav/>
-    <div className="quotation-page">
-      <main className="body">
-        <div className="left-section">
+      <Nav />
+      <div className="quotation-page">
+        <main className="body">
+          <div className="left-section">
+            <p><strong>Insurance Type: Family</strong></p>
+            <div className="field-spacing"></div>
+            <h2>{username}</h2>
+            <div className="field-spacing"></div>
+            <h3>Family Size: {allRelations.length}</h3>
+            <div className="field-spacing"></div>
+            <p><strong>Customer ID:</strong> {customerId}</p>
+            <div className="field-spacing"></div>
+            <h3>Pre-Existing Diseases: {diseaseData}</h3>
+            <div className="field-spacing"></div>
+            <h2>Premium Amount: ₹{finalPremium.toLocaleString()}</h2>
+            <div className="field-spacing"></div>
+            <h2>Pre-Existing Diseases Amount: ₹{preExistingAmount.toLocaleString()}</h2>
+            <div className="field-spacing"></div>
+          </div>
 
-        <p><strong>Insurance Type : Family </strong></p> 
-
-          {/* <h2>John Doe</h2> */}
-          <h2>{username}</h2>
-          {/* <p>Insurance Type: Family</p> */}
-
-          <h3>Family Size : {allRelations.length}</h3>
-         
-          <div className="field-spacing"></div> 
-
-          <p><strong>Customer ID:</strong> {customerId}</p>
-
-          <div className="field-spacing"></div> 
-
-          <h3>Pre-Existing Diseases : {diseaseData} </h3>
-          
-          <div className="field-spacing"></div> 
-          
-          <h2>Premium Amount : ₹{finalPremium.toLocaleString()}</h2>
-          {/* <p>₹{finalPremium.toLocaleString()}</p> */}
-
-          <div className="field-spacing"></div> 
-
-          <h2>Pre-Existing Diseases Amount : ₹{preExistingAmount.toLocaleString()}</h2>
-          {/* <p>₹{preExistingAmount.toLocaleString()}</p> Display pre-existing disease premium */}
-        </div>
-
-        <div className="right-section">
-          {/* <h3>Family Size</h3>
-          <input
-            type="text"
-            value={familySize}
-            onChange={(e) => handleInputChange(e, setFamilySize, 15)} // Max 8 members
-          />
-
-          <h3>Pre-Existing Diseases</h3>
-          <label>
+          <div className="right-section">
+            <h3>Sum Assured</h3>
+            <p className="amount-display">₹{sumAssured.toLocaleString()}</p>
             <input
-              type="checkbox"
-              checked={preExisting}
-              onChange={() => setPreExisting(!preExisting)}
+              type="range"
+              min="500000"
+              max="2500000"
+              step="500000"
+              value={sumAssured}
+              onChange={(e) => setSumAssured(Number(e.target.value))}
             />
-            Yes
-          </label> */}
 
-          <h3>Sum Assured</h3>
-          <p className="amount-display">₹{sumAssured.toLocaleString()}</p>
-          <input
-            type="range"
-            min="500000"
-            max="2500000"
-            step="500000"
-            value={sumAssured}
-            onChange={(e) => setSumAssured(Number(e.target.value))}
-          />
+            <div className="premium-card">
+              <h4>Initial Premium Amount</h4>
+              <p>₹{initialPremium.toLocaleString()}</p>
+            </div>
 
-          <div className="premium-card">
-            <h4>Initial Premium Amount </h4>
-            <p>₹{initialPremium.toLocaleString()}</p>
+            <div className="premium-card">
+              <h4>Final Premium Amount</h4>
+              <p>₹{finalPremium.toLocaleString()}</p>
+            </div>
+
+            <div className="discount-cards">
+              {["1 Year", "2 Years", "3 Years"].map((duration, index) => {
+                const years = index + 1;
+                return (
+                  <button
+                    key={duration}
+                    className={`duration-button ${selectedDuration === duration ? "selected" : ""}`}
+                    onClick={() => setSelectedDuration(duration)}
+                  >
+                    <h5>{duration}</h5>
+                    <p>₹{getPremiumForDuration(years).toLocaleString()}</p>
+                  </button>
+                );
+              })}
+            </div>
+
+            <button className="proceed-button" onClick={handleProceedClick}>
+              Proceed
+            </button>
           </div>
-
-          <div className="premium-card">
-            <h4>Final Premium Amount </h4>
-            <p>₹{finalPremium.toLocaleString()}</p>
-          </div>
-
-          <div className="discount-cards">
-            {["1 Year", "2 Years", "3 Years"].map((duration, index) => {
-              const years = index + 1;
-              return (
-                <button
-                  key={duration}
-                  className={`duration-button ${selectedDuration === duration ? "selected" : ""}`}
-                  onClick={() => setSelectedDuration(duration)}
-                >
-                  <h5>{duration}</h5>
-                  <p>₹{getPremiumForDuration(years).toLocaleString()}</p>
-                </button>
-              );
-            })}
-          </div>
-
-          <button
-            className="proceed-button"
-            onClick={() =>
-              alert(
-                `Proceeding with ${selectedDuration} premium: ₹${getPremiumForDuration(
-                  selectedDuration === "1 Year"
-                    ? 1
-                    : selectedDuration === "2 Years"
-                    ? 2
-                    : 3
-                ).toLocaleString()}`
-              )
-            }
-          >
-            Proceed
-          </button>
-        </div>
-      </main>
+        </main>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
